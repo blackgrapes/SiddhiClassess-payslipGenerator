@@ -11,6 +11,7 @@ const SignupPage = () => {
         className="bg-light p-4 rounded"
         style={{ width: "400px", boxShadow: "0 4px 8px rgba(0,0,0,0.2)" }}
       >
+        {/* ✅ Logo & Header */}
         <div
           className="text-center position-relative mb-3"
           style={{
@@ -20,9 +21,12 @@ const SignupPage = () => {
           }}
         >
           <img src="/logo.png" alt="logo" style={{ width: "40px" }} />
-          <h4 className="text-white mt-2">Siddhi Classess</h4>
+          <h4 className="text-white mt-2">Siddhi Classes</h4>
         </div>
+
         <h5 className="text-center mb-3">Create New Account</h5>
+
+        {/* ✅ Signup Form */}
         <form>
           <div className="row mb-3">
             <div className="col">
@@ -32,18 +36,28 @@ const SignupPage = () => {
               <input type="text" className="form-control" placeholder="Surname" />
             </div>
           </div>
+
           <div className="mb-3">
             <input type="text" className="form-control" placeholder="City" />
           </div>
+
           <div className="mb-3">
             <input type="email" className="form-control" placeholder="Email" />
           </div>
+
           <div className="mb-3">
             <input type="text" className="form-control" placeholder="Username" />
           </div>
+
+          {/* ✅ Date of Birth Input */}
+          <div className="mb-3">
+            <input type="date" className="form-control" placeholder="Date of Birth" />
+          </div>
+
           <div className="mb-3">
             <input type="password" className="form-control" placeholder="Password" />
           </div>
+
           <button className="btn btn-dark w-100">Sign Up</button>
         </form>
       </div>
