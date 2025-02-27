@@ -14,33 +14,24 @@ const Home = () => {
       {/* Main Content */}
       <div className="flex-grow-1 p-4" style={{ backgroundColor: "#5B2A0F", minHeight: "100vh" }}>
         <Container fluid>
-          {/* Top Bar */}
-          <Row className="mb-4 align-items-center">
-            <Col className="d-flex justify-content-between align-items-center" style={{ backgroundColor: "#E7D9B7", padding: "10px", borderRadius: "10px" }}>
+          {/* Top Bar (Only Title Now) */}
+          <Row className="mb-4">
+            <Col className="text-center" style={{ backgroundColor: "#E7D9B7", padding: "15px", borderRadius: "10px" }}>
               <h4 className="fw-bold">Siddhi Classes</h4>
-              <div>
-                <input type="text" placeholder="Search" className="form-control d-inline-block w-auto" />
-                <Button variant="light" className="ms-2">
-                  <i className="bi bi-envelope"></i>
-                </Button>
-                <Button variant="light" className="ms-2">
-                  <i className="bi bi-bell"></i>
-                </Button>
-                <Button variant="light" className="ms-2">
-                  <i className="bi bi-person-circle"></i>
-                </Button>
-              </div>
             </Col>
           </Row>
 
           {/* Main Section */}
-          <Row className="justify-content-center align-items-center text-center" style={{ backgroundColor: "#8C4A2F", borderRadius: "15px", padding: "30px", color: "#fff" }}>
-            <Col md={5}>
-              <Button variant="light" className="w-100 py-3 mb-3 fw-bold" style={{ borderRadius: "10px" }}>
+          <Row
+            className="justify-content-center align-items-center text-center mt-5"
+            style={{ backgroundColor: "#8C4A2F", borderRadius: "15px", padding: "50px 30px", color: "#fff" }}
+          >
+            <Col md={5} className="mb-3">
+              <Button variant="light" className="w-100 py-3 fw-bold" style={{ borderRadius: "10px" }}>
                 Teacher
               </Button>
             </Col>
-            <Col md={5}>
+            <Col md={5} className="mb-3">
               <Button variant="light" className="w-100 py-3 fw-bold" style={{ borderRadius: "10px" }}>
                 Student
               </Button>
