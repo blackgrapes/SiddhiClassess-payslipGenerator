@@ -1,5 +1,5 @@
 const express = require("express");
-const Admin = require("../models/Admin"); // Ensure correct path to your model
+const Admin = require("../models/AdminModule"); // Ensure correct path to your model
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
