@@ -71,7 +71,7 @@ const Login = () => {
 
           {/* Login Button */}
           <button type="submit" className="btn btn-dark w-100">LOGIN</button>
-
+          onClick={() => navigate("/Dashboard")} 
           {/* Create Account */}
           <div className="text-center mt-3">
             <button
