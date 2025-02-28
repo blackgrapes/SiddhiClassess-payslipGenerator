@@ -12,6 +12,7 @@ import AddTeacher from "./component/AddTeacher";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import TeacherList from "./component/TeacherList";
+import TeacherPayslip from "./component/TeacherPayslip";
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/teacherList" element={<TeacherList />} />
         <Route path="/StudentPayment/:rollNumber" element={<StudentPayslip/>} />
         <Route path="/addteacher" element={<AddTeacher/>} />
+        <Route path="/TeacherPayslip" element={<TeacherPayslip/>} />
       </Routes>
     </Router>
   );
