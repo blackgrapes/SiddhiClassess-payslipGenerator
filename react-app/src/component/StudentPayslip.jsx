@@ -4,8 +4,7 @@ import axios from "axios";
 import jsPDF from "jspdf";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
-
+import Sidebar from "./Sidebar";
 
 const API_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
 
@@ -66,24 +65,25 @@ const StudentPayslip = () => {
       setLoading(false);
     }
   };
+
   const generatePDF = () => {
     if (!student || payments.length === 0) {
       setMessage("❌ Cannot generate PDF. Missing student details or payments.");
       return;
     }
-  
+
     const pdf = new jsPDF("p", "mm", "a4");
     const margin = 15;
     let y = 20;
-  
+
     const totalPaid = payments.reduce((sum, payment) => sum + Number(payment.amount), 0);
     const remainingBalance = student.totalFees - totalPaid;
-  
-    pdf.setFont("times", "bold"); // Set font to Times New Roman (default in jsPDF)
+
+    pdf.setFont("times", "bold");
     pdf.setFontSize(18);
     pdf.text("Student Payslip", 85, y);
     y += 12;
-  
+
     pdf.setFont("times", "normal");
     pdf.setFontSize(12);
     pdf.text("Coaching Institute Name", margin, y);
@@ -92,16 +92,16 @@ const StudentPayslip = () => {
     y += 5;
     pdf.text("Phone: 9876543210 | Email: info@coaching.com", margin, y);
     y += 10;
-  
+
     pdf.setLineWidth(0.5);
     pdf.line(margin, y, 200, y);
     y += 10;
-  
+
     pdf.setFont("times", "bold");
     pdf.setFontSize(14);
     pdf.text("Student Details", margin, y);
     y += 8;
-  
+
     pdf.setFont("times", "normal");
     pdf.setFontSize(12);
     pdf.text(`Name: ${student.name}`, margin, y);
@@ -115,16 +115,16 @@ const StudentPayslip = () => {
     y += 7;
     pdf.text(`Pending Fees: ₹${remainingBalance}`, margin, y);
     y += 10;
-  
+
     pdf.setLineWidth(0.5);
     pdf.line(margin, y, 200, y);
     y += 10;
-  
+
     pdf.setFont("times", "bold");
     pdf.setFontSize(14);
     pdf.text("Payment History", margin, y);
     y += 8;
-  
+
     pdf.setFont("times", "normal");
     pdf.setFontSize(12);
     payments.forEach((payment, index) => {
@@ -135,82 +135,81 @@ const StudentPayslip = () => {
       );
       y += 7;
     });
-  
+
     pdf.save(`Student_Payslip_${student.rollNumber}.pdf`);
   };
-  
-  const totalPaid = payments.reduce((sum, payment) => sum + Number(payment.amount), 0);
-  const remainingBalance = student ? student.totalFees - totalPaid : 0;
 
   return (
-    <div className="container mt-4">
-      <h3>Student Payslip</h3>
+    <div className="d-flex">
+      <Sidebar />
+      <div className="container mt-4 p-4 rounded" style={{ backgroundColor: "#e3dcc2", color: "#69360d" }}>
+        <h3 className="text-center">Student Payslip</h3>
 
-      {fetching ? (
-        <p>Loading student details...</p>
-      ) : student ? (
-        <div className="card p-3 mt-3">
-          <h5>Student Details</h5>
-          <p><strong>Name:</strong> {student.name}</p>
-          <p><strong>Roll Number:</strong> {student.rollNumber}</p>
-          <p><strong>Class:</strong> {student.class}</p>
-          <p><strong>Phone Number:</strong> {student.phone}</p>
-          <p><strong>Total Fees:</strong> ₹{student.totalFees}</p>
-          <p><strong>Fees Paid:</strong> ₹{totalPaid}</p>
-          <p><strong>Pending Fees:</strong> ₹{remainingBalance}</p>
-
-          <button className="btn btn-primary mt-3" onClick={generatePDF}>
-            📄 Download PDF
-          </button>
-        </div>
-      ) : (
-        <p>❌ Student not found.</p>
-      )}
-
-      <form onSubmit={handleAddPayment} className="mt-3">
-        <h5>Add Payment</h5>
-        <div className="mb-2">
-          <label>Amount:</label>
-          <input
-            type="number"
-            className="form-control"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            required
-            min="1"
-          />
-        </div>
-        <div className="mb-2">
-          <label>Month:</label>
-          <DatePicker
-            selected={month}
-            onChange={(date) => setMonth(date)}
-            dateFormat="MMMM yyyy"
-            showMonthYearPicker
-            className="form-control"
-            placeholderText="Select Month"
-            required
-          />
-        </div>
-        <button className="btn btn-success" type="submit" disabled={loading}>
-          {loading ? "Processing..." : "Add Payment"}
-        </button>
-      </form>
-
-      {message && <p className="mt-2 text-info">{message}</p>}
-
-      <h4 className="mt-4">Payment History</h4>
-      <ul className="list-group">
-        {payments.length > 0 ? (
-          payments.map((payment, index) => (
-            <li key={index} className="list-group-item">
-              <strong>{payment.month}</strong> - ₹{payment.amount} | {payment.status} | {new Date(payment.payDate).toLocaleDateString()}
-            </li>
-          ))
+        {fetching ? (
+          <p>Loading student details...</p>
+        ) : student ? (
+          <div className="card p-3 mt-3" style={{ backgroundColor: "#fff7e6", border: "1px solid #69360d" }}>
+            <h5>Student Details</h5>
+            <p><strong>Name:</strong> {student.name}</p>
+            <p><strong>Roll Number:</strong> {student.rollNumber}</p>
+            <p><strong>Class:</strong> {student.class}</p>
+            <p><strong>Phone:</strong> {student.phone}</p>
+            <p><strong>Total Fees:</strong> ₹{student.totalFees}</p>
+            <p><strong>Fees Paid:</strong> ₹{payments.reduce((sum, payment) => sum + Number(payment.amount), 0)}</p>
+            <p><strong>Pending Fees:</strong> ₹{student.totalFees - payments.reduce((sum, payment) => sum + Number(payment.amount), 0)}</p>
+            <button className="btn mt-3" onClick={generatePDF} style={{ backgroundColor: "#69360d", color: "#e3dcc2" }}>
+              📄 Download PDF
+            </button>
+          </div>
         ) : (
-          <p>No payments recorded.</p>
+          <p>❌ Student not found.</p>
         )}
-      </ul>
+
+        <form onSubmit={handleAddPayment} className="mt-3">
+          <h5>Add Payment</h5>
+          <div className="mb-2">
+            <label>Amount:</label>
+            <input
+              type="number"
+              className="form-control"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              required
+              min="1"
+            />
+          </div>
+          <div className="mb-2">
+            <label>Month:</label>
+            <DatePicker
+              selected={month}
+              onChange={(date) => setMonth(date)}
+              dateFormat="MMMM yyyy"
+              showMonthYearPicker
+              className="form-control"
+              placeholderText="Select Month"
+              required
+            />
+          </div>
+          <button className="btn btn-success" type="submit" disabled={loading}>
+            {loading ? "Processing..." : "Add Payment"}
+          </button>
+        </form>
+
+        {message && <p className="mt-2 text-info">{message}</p>}
+
+        <h4 className="mt-4">Payment History</h4>
+        <ul className="list-group">
+          {payments.length > 0 ? (
+            payments.map((payment, index) => (
+              <li key={index} className="list-group-item">
+                <strong>{payment.month}</strong> - ₹{payment.amount} | {payment.status} | {new Date(payment.payDate).toLocaleDateString()}
+              </li>
+            ))
+          ) : (
+            <p>No payments recorded.</p>
+          )}
+        </ul>
+      </div>
     </div>
   );
 };
