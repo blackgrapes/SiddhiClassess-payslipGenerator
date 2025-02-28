@@ -1,9 +1,12 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Ensure Bootstrap Icons are imported
 
 const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="d-flex">
       {/* Sidebar */}
@@ -27,12 +30,22 @@ const Home = () => {
             style={{ backgroundColor: "#8C4A2F", borderRadius: "15px", padding: "50px 30px", color: "#fff" }}
           >
             <Col md={5} className="mb-3">
-              <Button variant="light" className="w-100 py-3 fw-bold" style={{ borderRadius: "10px" }}>
+              <Button
+                variant="light"
+                className="w-100 py-3 fw-bold"
+                style={{ borderRadius: "10px" }}
+                onClick={() => navigate("/teacher")}
+              >
                 Teacher
               </Button>
             </Col>
             <Col md={5} className="mb-3">
-              <Button variant="light" className="w-100 py-3 fw-bold" style={{ borderRadius: "10px" }}>
+              <Button
+                variant="light"
+                className="w-100 py-3 fw-bold"
+                style={{ borderRadius: "10px" }}
+                onClick={() => navigate("/studentlist")}
+              >
                 Student
               </Button>
             </Col>

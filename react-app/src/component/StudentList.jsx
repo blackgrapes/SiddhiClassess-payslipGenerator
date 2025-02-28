@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar"; // ✅ Sidebar component properly imported
 
 const API_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
@@ -10,12 +10,28 @@ const StudentList = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/students`)
-      .then((response) => {
-        setStudents(response.data);
+      .get(`${API_URL}/student/`)
+      .then(async (response) => {
+        const studentData = await Promise.all(
+          response.data.map(async (student) => {
+            try {
+              const paymentResponse = await axios.get(`${API_URL}/student/${student.rollNumber}/payments`);
+              const totalPaid = paymentResponse.data.payments.reduce(
+                (sum, payment) => (payment.status === "Paid" ? sum + payment.amount : sum),
+                0
+              );
+              return { ...student, feesPaid: totalPaid, pendingFees: student.totalFees - totalPaid };
+            } catch (error) {
+              console.error("Error fetching payment details for", student.rollNumber, error);
+              return { ...student, feesPaid: 0, pendingFees: student.totalFees };
+            }
+          })
+        );
+        setStudents(studentData);
         setLoading(false);
       })
       .catch((error) => {
@@ -37,7 +53,7 @@ const StudentList = () => {
             <h2 className="text-white p-3 rounded" style={{ backgroundColor: "#69360d" }}>
               Siddhi Classes - Student List
             </h2>
-            <Link to="/add-student" className="btn btn-primary">+ Add Student</Link>
+            <button onClick={() => navigate("/AddStudent")} className="btn btn-primary">+ Add Student</button>
           </div>
 
           {error && <div className="alert alert-danger text-center">{error}</div>}
@@ -52,6 +68,7 @@ const StudentList = () => {
                   <th>Phone Number</th>
                   <th>Total Fees</th>
                   <th>Fees Paid</th>
+                  <th>Pending Fees</th>
                   <th>Payment Slip</th>
                   <th>Download</th>
                 </tr>
@@ -59,7 +76,7 @@ const StudentList = () => {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="8" className="text-center">
+                    <td colSpan="9" className="text-center">
                       <div className="spinner-border text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>
                       </div>
@@ -67,7 +84,7 @@ const StudentList = () => {
                   </tr>
                 ) : students.length === 0 ? (
                   <tr>
-                    <td colSpan="8" className="text-center">No students found</td>
+                    <td colSpan="9" className="text-center">No students found</td>
                   </tr>
                 ) : (
                   students.map((student) => (
@@ -78,8 +95,9 @@ const StudentList = () => {
                       <td>{student.phone}</td>
                       <td>₹{student.totalFees}</td>
                       <td>₹{student.feesPaid}</td>
+                      <td>₹{student.pendingFees}</td>
                       <td>
-                        <Link to={`/payment-slip/${student.rollNumber}`} className="btn btn-sm btn-info">
+                        <Link to={`/StudentPayment/${student.rollNumber}`} className="btn btn-sm btn-info">
                           Payment Slip
                         </Link>
                       </td>
