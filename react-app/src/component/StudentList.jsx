@@ -13,96 +13,90 @@ const StudentList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(`${API_URL}/student/`)
-      .then(async (response) => {
-        const studentData = await Promise.all(
-          response.data.map(async (student) => {
-            try {
-              const paymentResponse = await axios.get(
-                `${API_URL}/student/${student.rollNumber}/payments`
-              );
-              const totalPaid = paymentResponse.data.payments.reduce(
-                (sum, payment) =>
-                  payment.status === "Paid" ? sum + payment.amount : sum,
-                0
-              );
-              return {
-                ...student,
-                feesPaid: totalPaid,
-                pendingFees: student.totalFees - totalPaid,
-              };
-            } catch (error) {
-              console.error(
-                "Error fetching payment details for",
-                student.rollNumber,
-                error
-              );
-              return {
-                ...student,
-                feesPaid: 0,
-                pendingFees: student.totalFees,
-              };
-            }
-          })
-        );
-        setStudents(studentData);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching students:", error);
-        setError("Failed to fetch student data. Try again later.");
-        setLoading(false);
-      });
+    fetchStudents();
   }, []);
 
+  const fetchStudents = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/student/`);
+      const studentData = await Promise.all(
+        response.data.map(async (student) => {
+          try {
+            const paymentResponse = await axios.get(
+              `${API_URL}/student/${student.rollNumber}/payments`
+            );
+            const totalPaid = paymentResponse.data.payments.reduce(
+              (sum, payment) =>
+                payment.status === "Paid" ? sum + payment.amount : sum,
+              0
+            );
+            return {
+              ...student,
+              feesPaid: totalPaid,
+              pendingFees: student.totalFees - totalPaid,
+            };
+          } catch (error) {
+            console.error(
+              "Error fetching payment details for",
+              student.rollNumber,
+              error
+            );
+            return {
+              ...student,
+              feesPaid: 0,
+              pendingFees: student.totalFees,
+            };
+          }
+        })
+      );
+      setStudents(studentData);
+    } catch (error) {
+      console.error("Error fetching students:", error);
+      setError("Failed to fetch student data. Try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (rollNumber) => {
+    if (!window.confirm("Are you sure you want to delete this student?")) return;
+    try {
+      await axios.delete(`${API_URL}/student/${rollNumber}`);
+      setStudents(students.filter((student) => student.rollNumber !== rollNumber));
+    } catch (error) {
+      console.error("Error deleting student:", error);
+      alert("Failed to delete student. Please try again.");
+    }
+  };
+
   return (
-    <div
-      className="d-flex"
-      style={{ backgroundColor: "#69360d", minHeight: "100vh" }}
-    >
-      {/* Sidebar - Width Increased */}
-      <div
-        style={{ width: "320px", backgroundColor: "#492105", minHeight: "100vh" }}
-      >
+    <div className="d-flex" style={{ backgroundColor: "#69360d", minHeight: "100vh" }}>
+      {/* Sidebar */}
+      <div style={{ width: "320px", backgroundColor: "#492105", minHeight: "100vh" }}>
         <Sidebar />
       </div>
 
-      {/* Main Content - No Extra Space on Left */}
+      {/* Main Content */}
       <div className="container-fluid p-4" style={{ backgroundColor: "#e3dcc2", flexGrow: 1 }}>
         <div className="p-4 rounded shadow-lg" style={{ backgroundColor: "white" }}>
-          {/* Header with Updated "+ Add Student" Button */}
+          {/* Header */}
           <div className="d-flex align-items-center justify-content-between mb-4">
-            <h2
-              className="text-white p-3 rounded"
-              style={{
-                backgroundColor: "#69360d",
-                width: "100%",
-                textAlign: "center",
-              }}
-            >
+            <h2 className="text-white p-3 rounded text-center" style={{ backgroundColor: "#69360d", width: "100%" }}>
               Siddhi Classes - Student List
             </h2>
-
-            {/* Smaller & Clean Add Student Button */}
             <button
               onClick={() => navigate("/AddStudent")}
               className="btn btn-success btn-sm px-3 py-1 shadow-sm"
-              style={{
-                fontWeight: "bold",
-                borderRadius: "4px",
-                transition: "0.3s",
-                marginLeft: "auto",
-              }}
+              style={{ fontWeight: "bold", borderRadius: "4px", transition: "0.3s" }}
             >
-            Add STUDENT
+              ➕ Add Student
             </button>
           </div>
 
           {/* Error Message */}
           {error && <div className="alert alert-danger text-center">{error}</div>}
 
-          {/* Table Container - Increased Size & Shifted Up */}
+          {/* Student Table */}
           <div className="table-responsive">
             <table className="table table-bordered text-center">
               <thead className="text-white" style={{ backgroundColor: "#69360d" }}>
@@ -114,7 +108,7 @@ const StudentList = () => {
                   <th>Total Fees</th>
                   <th>Fees Paid</th>
                   <th>Pending Fees</th>
-                  <th>Payment Slip</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -141,9 +135,27 @@ const StudentList = () => {
                       <td>₹{student.feesPaid}</td>
                       <td>₹{student.pendingFees}</td>
                       <td>
-                        <Link to={`/StudentPayment/${student.rollNumber}`} className="btn btn-sm btn-info">
-                          Payment Slip
+                        {/* Payment Slip Button */}
+                        <Link to={`/StudentPayment/${student.rollNumber}`} className="btn btn-sm btn-info me-2">
+                          📄 Payment Slip
                         </Link>
+
+                        {/* Edit Button */}
+                        <Link
+                          to={`/Editstudent/${student.rollNumber}`}
+                          className="btn btn-sm btn-warning me-2"
+                        >
+                          ✏️ Edit
+                         
+                        </Link>
+
+                        {/* Delete Button */}
+                        <button
+                          onClick={() => handleDelete(student.rollNumber)}
+                          className="btn btn-sm btn-danger"
+                        >
+                          🗑️ Delete
+                        </button>
                       </td>
                     </tr>
                   ))
