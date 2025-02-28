@@ -93,6 +93,12 @@ router.post("/:rollNumber/add-payment", async (req, res) => {
   try {
     const { amount, payDate, month, status } = req.body;
 
+
+    if (!amount || !payDate || !month || !status) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+
     const student = await Student.findOne({ rollNumber: req.params.rollNumber });
     if (!student) return res.status(404).json({ message: "Student not found" });
 
