@@ -115,7 +115,6 @@ const StudentList = () => {
                   <th>Fees Paid</th>
                   <th>Pending Fees</th>
                   <th>Payment Slip</th>
-                  <th>Download</th>
                 </tr>
               </thead>
               <tbody>
@@ -145,9 +144,6 @@ const StudentList = () => {
                         <Link to={`/StudentPayment/${student.rollNumber}`} className="btn btn-sm btn-info">
                           Payment Slip
                         </Link>
-                      </td>
-                      <td>
-                        <button className="btn btn-sm btn-success">Download</button>
                       </td>
                     </tr>
                   ))
