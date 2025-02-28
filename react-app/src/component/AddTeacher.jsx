@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import axios from "axios";
 import Sidebar from "./Sidebar";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const AddTeacher = () => {
   const [teacher, setTeacher] = useState({
@@ -12,23 +13,24 @@ const AddTeacher = () => {
     salary: "",
   });
 
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ text: "", type: "" });
 
   const handleChange = (e) => {
-    try {
-      const { name, value } = e.target;
-      setTeacher((prev) => ({ ...prev, [name]: value }));
-    } catch (err) {
-      console.error("Error in handleChange:", err);
-      setError("Something went wrong while updating the form.");
-    }
+    const { name, value } = e.target;
+    setTeacher((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage({ text: "", type: "" });
+
     try {
-      console.log("Teacher Data Submitted:", teacher);
-      alert("Teacher Added Successfully!");
+      const response = await axios.post("http://localhost:5000/teacher/add", teacher);
+      setMessage({ text: "✅ Teacher added successfully!", type: "success" });
+
+      // Reset form
       setTeacher({
         name: "",
         email: "",
@@ -37,62 +39,77 @@ const AddTeacher = () => {
         dateOfJoining: "",
         salary: "",
       });
-    } catch (err) {
-      console.error("Error submitting form:", err);
-      setError("Failed to submit form. Please try again.");
+    } catch (error) {
+      console.error("Error adding teacher:", error);
+      setMessage({
+        text: error.response?.data?.message || "❌ Something went wrong!",
+        type: "danger",
+      });
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="d-flex" style={{ backgroundColor: "#69360d", minHeight: "100vh" }}>
+    <div className="d-flex" style={{ height: "100vh", background: "linear-gradient(to bottom, #69360d, #e3dcc2)" }}>
       {/* Sidebar */}
-      <Sidebar />
+      <div
+        style={{
+          width: "300px",
+          backgroundColor: "#4a1e08",
+          boxShadow: "4px 0 10px rgba(0,0,0,0.2)",
+          height: "100vh",
+          padding: "20px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Sidebar />
+      </div>
 
       {/* Main Content */}
-      <div className="flex-grow-1 p-4" style={{ backgroundColor: "#e3dcc2", minHeight: "100vh" }}>
-        <Container>
-          <Row className="justify-content-center">
-            <Col md={8}>
-              <h3 className="mb-4 text-center text-white">Add Teacher</h3>
-              {error && <p className="text-danger text-center">{error}</p>}
-              <Form onSubmit={handleSubmit} className="p-4 shadow-lg rounded" style={{ backgroundColor: "#fff" }}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Name</Form.Label>
-                  <Form.Control type="text" name="name" value={teacher.name} onChange={handleChange} required />
-                </Form.Group>
+      <div className="d-flex justify-content-center align-items-center flex-grow-1 px-4">
+        <div className="bg-light p-5 rounded" style={{ width: "1000px", boxShadow: "0 6px 12px rgba(0,0,0,0.2)" }}>
+          <h3 className="text-center mb-4 text-dark">Add New Teacher</h3>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control type="email" name="email" value={teacher.email} onChange={handleChange} required />
-                </Form.Group>
+          <form onSubmit={handleSubmit}>
+            <div className="row">
+              {[
+                { label: "Name", type: "text", name: "name" },
+                { label: "Email", type: "email", name: "email" },
+                { label: "Phone", type: "text", name: "phone" },
+                { label: "Designation", type: "text", name: "designation" },
+                { label: "Date of Joining", type: "date", name: "dateOfJoining" },
+                { label: "Salary", type: "number", name: "salary" },
+              ].map((field, index) => (
+                <div key={index} className="col-md-6 mb-3">
+                  <label className="form-label fw-bold">{field.label}</label>
+                  <input
+                    type={field.type}
+                    className="form-control border-dark"
+                    name={field.name}
+                    value={teacher[field.name]}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                  />
+                </div>
+              ))}
+            </div>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Phone</Form.Label>
-                  <Form.Control type="text" name="phone" value={teacher.phone} onChange={handleChange} required />
-                </Form.Group>
+            {/* Submit Button with Spinner during Loading */}
+            <button className="btn btn-dark w-100 py-2" type="submit" disabled={loading}>
+              {loading ? <span className="spinner-border spinner-border-sm"></span> : "Add Teacher"}
+            </button>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Designation</Form.Label>
-                  <Form.Control type="text" name="designation" value={teacher.designation} onChange={handleChange} required />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Date of Joining</Form.Label>
-                  <Form.Control type="date" name="dateOfJoining" value={teacher.dateOfJoining} onChange={handleChange} required />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Salary</Form.Label>
-                  <Form.Control type="number" name="salary" value={teacher.salary} onChange={handleChange} required />
-                </Form.Group>
-
-                <Button variant="dark" type="submit" className="w-100">
-                  Add Teacher
-                </Button>
-              </Form>
-            </Col>
-          </Row>
-        </Container>
+            {/* Message Alert */}
+            {message.text && (
+              <div className={`alert mt-3 alert-${message.type}`}>
+                {message.text}
+              </div>
+            )}
+          </form>
+        </div>
       </div>
     </div>
   );

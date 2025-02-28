@@ -1,62 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import axios from "axios";
 
 const TeacherList = () => {
   const navigate = useNavigate();
+  const [teachers, setTeachers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const teachers = [
-    {
-      id: 1,
-      name: "Amit Sharma",
-      email: "amit.sharma@example.com",
-      phone: "9876543210",
-      designation: "Mathematics Teacher",
-      salary: "₹50,000",
-      paidUpto: "March 2025",
-    },
-    {
-      id: 2,
-      name: "Sunita Verma",
-      email: "sunita.verma@example.com",
-      phone: "9876543211",
-      designation: "Science Teacher",
-      salary: "₹48,000",
-      paidUpto: "March 2025",
-    },
-    {
-      id: 3,
-      name: "Rajesh Kumar",
-      email: "rajesh.kumar@example.com",
-      phone: "9876543212",
-      designation: "English Teacher",
-      salary: "₹52,000",
-      paidUpto: "March 2025",
-    },
-    {
-      id: 4,
-      name: "Neha Singh",
-      email: "neha.singh@example.com",
-      phone: "9876543213",
-      designation: "History Teacher",
-      salary: "₹47,000",
-      paidUpto: "March 2025",
-    },
-    {
-      id: 5,
-      name: "Manoj Tiwari",
-      email: "manoj.tiwari@example.com",
-      phone: "9876543214",
-      designation: "Physics Teacher",
-      salary: "₹55,000",
-      paidUpto: "March 2025",
-    },
-  ];
+  // Fetch teachers from the backend
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/teacher/all");
+        setTeachers(response.data);
+      } catch (error) {
+        setError("Failed to fetch teacher data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTeachers();
+  }, []);
+
+  // Delete Teacher Function
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this teacher?")) {
+      try {
+        await axios.delete(`http://localhost:5000/teacher/delete/${id}`);
+        setTeachers(teachers.filter((teacher) => teacher._id !== id));
+      } catch (error) {
+        alert("Failed to delete teacher.");
+      }
+    }
+  };
 
   return (
     <div className="d-flex" style={{ backgroundColor: "#69360d", minHeight: "100vh" }}>
-      {/* Sidebar - Fix for Layout */}
+      {/* Sidebar */}
       <div style={{ width: "320px", backgroundColor: "#492105", minHeight: "100vh" }}>
         <Sidebar />
       </div>
@@ -64,7 +48,6 @@ const TeacherList = () => {
       {/* Main Content */}
       <div className="container-fluid p-4" style={{ backgroundColor: "#e3dcc2", flexGrow: 1 }}>
         <div className="p-4 rounded shadow-lg" style={{ backgroundColor: "white" }}>
-          {/* Header with "+ Add Teacher" Button */}
           <div className="d-flex align-items-center justify-content-between mb-4">
             <h2
               className="text-white p-3 rounded"
@@ -77,7 +60,6 @@ const TeacherList = () => {
               Siddhi Classes - Teacher List
             </h2>
 
-            {/* Smaller & Professional Add Teacher Button */}
             <button
               onClick={() => navigate("/AddTeacher")}
               className="btn btn-success btn-sm px-3 py-1 shadow-sm"
@@ -92,39 +74,68 @@ const TeacherList = () => {
             </button>
           </div>
 
-          {/* Teacher Table */}
-          <div className="table-responsive">
-            <Table bordered hover className="text-center">
-              <thead className="text-white" style={{ backgroundColor: "#69360d" }}>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Designation</th>
-                  <th>Salary</th>
-                  <th>Paid Upto</th>
-                  <th>Download</th>
-                </tr>
-              </thead>
-              <tbody>
-                {teachers.map((teacher, index) => (
-                  <tr key={teacher.id}>
-                    <td>{index + 1}</td>
-                    <td>{teacher.name}</td>
-                    <td>{teacher.email}</td>
-                    <td>{teacher.phone}</td>
-                    <td>{teacher.designation}</td>
-                    <td>{teacher.salary}</td>
-                    <td>{teacher.paidUpto}</td>
-                    <td>
-                      <Button variant="success" size="sm">Download</Button>
-                    </td>
+          {loading ? (
+            <p>Loading teachers...</p>
+          ) : error ? (
+            <p className="text-danger">{error}</p>
+          ) : (
+            <div className="table-responsive">
+              <Table bordered hover className="text-center">
+                <thead className="text-white" style={{ backgroundColor: "#69360d" }}>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Designation</th>
+                    <th>Salary</th>
+                    <th>Payslip</th>
+                    <th>Update</th>
+                    <th>Delete</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
-          </div>
+                </thead>
+                <tbody>
+                  {teachers.map((teacher, index) => (
+                    <tr key={teacher._id}>
+                      <td>{index + 1}</td>
+                      <td>{teacher.name}</td>
+                      <td>{teacher.email}</td>
+                      <td>{teacher.phone}</td>
+                      <td>{teacher.designation}</td>
+                      <td>₹{teacher.salary}</td>
+                      <td>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => navigate(`/Payslip/${teacher._id}`)}
+                        >
+                          Payslip
+                        </Button>
+                      </td>
+                      <td>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => navigate(`/UpdateTeacher/${teacher._id}`)}
+                        >
+                          Update
+                        </Button>
+                      </td>
+                      <td>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => handleDelete(teacher._id)}
+                        >
+                          Delete
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          )}
         </div>
       </div>
     </div>
