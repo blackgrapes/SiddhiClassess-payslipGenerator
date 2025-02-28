@@ -7,6 +7,7 @@ import Home from "./component/Home";
 import AddStudent from "./component/AddStudent";
 import StudentList from "./component/StudentList";
 import StudentPayslip from "./component/StudentPayslip";
+import AddTeacher from "./component/AddTeacher";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -25,6 +26,7 @@ function App() {
         <Route path="/StudentList" element={<StudentList />} />
         <Route path="/teacherList" element={<TeacherList />} />
         <Route path="/StudentPayment/:rollNumber" element={<StudentPayslip/>} />
+        <Route path="/addteacher" element={<AddTeacher/>} />
       </Routes>
     </Router>
   );

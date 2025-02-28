@@ -1,8 +1,9 @@
 import React from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Ensure Bootstrap Icons are imported
+import homeImage from "../assets/home-image.svg";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const Home = () => {
       {/* Main Content */}
       <div className="flex-grow-1 p-4" style={{ backgroundColor: "#5B2A0F", minHeight: "100vh" }}>
         <Container fluid>
-          {/* Top Bar (Only Title Now) */}
+          {/* Top Bar */}
           <Row className="mb-4">
             <Col className="text-center" style={{ backgroundColor: "#E7D9B7", padding: "15px", borderRadius: "10px" }}>
               <h4 className="fw-bold">Siddhi Classes</h4>
@@ -34,7 +35,7 @@ const Home = () => {
                 variant="light"
                 className="w-100 py-3 fw-bold"
                 style={{ borderRadius: "10px" }}
-                onClick={() => navigate("/teacher")}
+                onClick={() => navigate("/teacherList")}
               >
                 Teacher
               </Button>
@@ -48,6 +49,18 @@ const Home = () => {
               >
                 Student
               </Button>
+            </Col>
+          </Row>
+
+          {/* Image in a Separate Row Below */}
+          <Row className="justify-content-center mt-5">
+            <Col xs={12} className="text-center">
+              <Image
+                src={homeImage}
+                alt="Home Illustration"
+                fluid
+                style={{ maxWidth: "80%", height: "auto" }} // Increase size
+              />
             </Col>
           </Row>
         </Container>

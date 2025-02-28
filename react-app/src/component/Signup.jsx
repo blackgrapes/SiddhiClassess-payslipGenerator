@@ -24,7 +24,7 @@ const SignupPage = () => {
   // ✅ Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setLoading(true); 
     setMessage("");
 
     try {

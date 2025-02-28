@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaUser, FaLock } from "react-icons/fa";
-import logo from "../assets/logo.svg"; // Ensure correct path
+; // Ensure correct path
 
 const Login = () => {
   const navigate = useNavigate(); // For navigation
