@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import "bootstrap/dist/css/bootstrap.min.css";
+import logo from "../assets/colorlogo.svg"; // ✅ Logo Import
 
 const AddTeacher = () => {
   const [teacher, setTeacher] = useState({
@@ -30,7 +31,7 @@ const AddTeacher = () => {
       const response = await axios.post("http://localhost:5000/teacher/add", teacher);
       setMessage({ text: "✅ Teacher added successfully!", type: "success" });
 
-      // Reset form
+      // ✅ Reset form
       setTeacher({
         name: "",
         email: "",
@@ -52,7 +53,8 @@ const AddTeacher = () => {
 
   return (
     <div className="d-flex" style={{ height: "100vh", background: "linear-gradient(to bottom, #69360d, #e3dcc2)" }}>
-      {/* Sidebar */}
+      
+      {/* ✅ Sidebar */}
       <div
         style={{
           width: "300px",
@@ -67,12 +69,18 @@ const AddTeacher = () => {
         <Sidebar />
       </div>
 
-      {/* Main Content */}
+      {/* ✅ Main Content */}
       <div className="d-flex justify-content-center align-items-center flex-grow-1 px-4">
         <div className="bg-light p-5 rounded" style={{ width: "1000px", boxShadow: "0 6px 12px rgba(0,0,0,0.2)" }}>
-          <h3 className="text-center mb-4 text-dark">Add New Teacher</h3>
+          
+          {/* ✅ LOGO + Siddhi Classes (Brown Background) */}
+          <div className="text-center p-3 rounded" style={{ backgroundColor: "#69360d" }}>
+            <img src={logo} alt="Siddhi Classes Logo" style={{ height: "60px", marginBottom: "10px" }} />
+            <h3 className="text-white">Siddhi Classes - Add Teacher</h3>
+          </div>
 
-          <form onSubmit={handleSubmit}>
+          {/* ✅ Teacher Form */}
+          <form onSubmit={handleSubmit} className="mt-3">
             <div className="row">
               {[
                 { label: "Name", type: "text", name: "name" },
@@ -97,18 +105,19 @@ const AddTeacher = () => {
               ))}
             </div>
 
-            {/* Submit Button with Spinner during Loading */}
+            {/* ✅ Submit Button with Loading Spinner */}
             <button className="btn btn-dark w-100 py-2" type="submit" disabled={loading}>
               {loading ? <span className="spinner-border spinner-border-sm"></span> : "Add Teacher"}
             </button>
 
-            {/* Message Alert */}
+            {/* ✅ Message Alert */}
             {message.text && (
               <div className={`alert mt-3 alert-${message.type}`}>
                 {message.text}
               </div>
             )}
           </form>
+
         </div>
       </div>
     </div>

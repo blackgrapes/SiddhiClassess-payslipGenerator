@@ -1,5 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import logo from "../assets/colorlogo.svg"; // ✅ Logo import
 
 const ForgotPassword = () => {
   return (
@@ -11,7 +12,7 @@ const ForgotPassword = () => {
         className="bg-light p-4 rounded"
         style={{ width: "400px", boxShadow: "0 4px 8px rgba(0,0,0,0.2)" }}
       >
-        {/* ✅ Header */}
+        {/* ✅ Header with Logo */}
         <div
           className="text-center position-relative mb-3"
           style={{
@@ -20,6 +21,12 @@ const ForgotPassword = () => {
             borderRadius: "10px 10px 0 0",
           }}
         >
+          <img
+            src={logo} // ✅ Using imported logo
+            alt="Siddhi Classes Logo"
+            className="mb-2"
+            style={{ width: "60px", height: "60px", borderRadius: "50%" }}
+          />
           <h4 className="text-white mt-2">Siddhi Classes</h4>
         </div>
 

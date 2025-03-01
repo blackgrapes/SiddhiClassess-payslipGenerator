@@ -5,7 +5,6 @@ import jsPDF from "jspdf";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Sidebar from "./Sidebar";
-
 const API_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
 
 const StudentPayslip = () => {
@@ -21,7 +20,6 @@ const StudentPayslip = () => {
   useEffect(() => {
     fetchStudentDetails();
   }, []);
-
   const fetchStudentDetails = async () => {
     try {
       const res = await axios.get(`${API_URL}/student/${rollNumber}`);
@@ -140,75 +138,61 @@ const StudentPayslip = () => {
   };
 
   return (
-    <div className="d-flex">
-      <Sidebar />
-      <div className="container mt-4 p-4 rounded" style={{ backgroundColor: "#e3dcc2", color: "#69360d" }}>
-        <h3 className="text-center">Student Payslip</h3>
+    <div className="container-fluid" style={{ backgroundColor: "#e3dcc2", minHeight: "100vh" }}>
+      <div className="row">
+        {/* Fixed Sidebar */}
+        <div className="col-md-3 col-lg-2 bg-dark text-white min-vh-100 position-fixed">
+          <Sidebar />
+        </div>
+     
+        {/* Main Content */}
+        <div className="col-md-9 col-lg-10 offset-md-3 offset-lg-2 p-4">
+          <h3 className="text-center" style={{ color: "#69360d" }}>Student Payslip</h3>
 
-        {fetching ? (
-          <p>Loading student details...</p>
-        ) : student ? (
-          <div className="card p-3 mt-3" style={{ backgroundColor: "#fff7e6", border: "1px solid #69360d" }}>
-            <h5>Student Details</h5>
-            <p><strong>Name:</strong> {student.name}</p>
-            <p><strong>Roll Number:</strong> {student.rollNumber}</p>
-            <p><strong>Class:</strong> {student.class}</p>
-            <p><strong>Phone:</strong> {student.phone}</p>
-            <p><strong>Total Fees:</strong> ₹{student.totalFees}</p>
-            <p><strong>Fees Paid:</strong> ₹{payments.reduce((sum, payment) => sum + Number(payment.amount), 0)}</p>
-            <p><strong>Pending Fees:</strong> ₹{student.totalFees - payments.reduce((sum, payment) => sum + Number(payment.amount), 0)}</p>
-            <button className="btn mt-3" onClick={generatePDF} style={{ backgroundColor: "#69360d", color: "#e3dcc2" }}>
-              📄 Download PDF
-            </button>
-          </div>
-        ) : (
-          <p>❌ Student not found.</p>
-        )}
-
-        <form onSubmit={handleAddPayment} className="mt-3">
-          <h5>Add Payment</h5>
-          <div className="mb-2">
-            <label>Amount:</label>
-            <input
-              type="number"
-              className="form-control"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              required
-              min="1"
-            />
-          </div>
-          <div className="mb-2">
-            <label>Month:</label>
-            <DatePicker
-              selected={month}
-              onChange={(date) => setMonth(date)}
-              dateFormat="MMMM yyyy"
-              showMonthYearPicker
-              className="form-control"
-              placeholderText="Select Month"
-              required
-            />
-          </div>
-          <button className="btn btn-success" type="submit" disabled={loading}>
-            {loading ? "Processing..." : "Add Payment"}
-          </button>
-        </form>
-
-        {message && <p className="mt-2 text-info">{message}</p>}
-
-        <h4 className="mt-4">Payment History</h4>
-        <ul className="list-group">
-          {payments.length > 0 ? (
-            payments.map((payment, index) => (
-              <li key={index} className="list-group-item">
-                <strong>{payment.month}</strong> - ₹{payment.amount} | {payment.status} | {new Date(payment.payDate).toLocaleDateString()}
-              </li>
-            ))
+          {fetching ? (
+            <p>Loading student details...</p>
+          ) : student ? (
+            <div className="card p-3 mt-3" style={{ backgroundColor: "#e3dcc2", border: "1px solid #69360d" }}>
+              <h5 style={{ color: "#69360d" }}>Student Details</h5>
+              <p><strong>Name:</strong> {student.name}</p>
+              <p><strong>Roll Number:</strong> {student.rollNumber}</p>
+              <p><strong>Class:</strong> {student.class}</p>
+              <p><strong>Phone:</strong> {student.phone}</p>
+              <p><strong>Total Fees:</strong> ₹{student.totalFees}</p>
+              <p><strong>Fees Paid:</strong> ₹{payments.reduce((sum, payment) => sum + Number(payment.amount), 0)}</p>
+              <p><strong>Pending Fees:</strong> ₹{student.totalFees - payments.reduce((sum, payment) => sum + Number(payment.amount), 0)}</p>
+              <button className="btn mt-3" style={{ backgroundColor: "#69360d", color: "#fff" }} onClick={generatePDF}>
+                📄 Download PDF
+              </button>
+            </div>
           ) : (
-            <p>No payments recorded.</p>
+            <p className="text-danger">❌ Student not found.</p>
           )}
-        </ul>
+
+          {/* Payment Form */}
+          <form onSubmit={handleAddPayment} className="mt-3">
+            <h5 style={{ color: "#69360d" }}>Add Payment</h5>
+            <div className="mb-2">
+              <label>Amount:</label>
+              <input type="number" className="form-control" value={amount} onChange={(e) => setAmount(e.target.value)} required min="1" />
+            </div>
+            <div className="mb-2">
+              <label>Month:</label>
+              <DatePicker selected={month} onChange={(date) => setMonth(date)} dateFormat="MMMM yyyy" showMonthYearPicker className="form-control" placeholderText="Select Month" required />
+            </div>
+            <button className="btn" style={{ backgroundColor: "#69360d", color: "#fff" }} type="submit" disabled={loading}>
+              {loading ? "Processing..." : "Add Payment"}
+            </button>
+          </form>
+
+          {/* Payment History */}
+          <h4 className="mt-4" style={{ color: "#69360d" }}>Payment History</h4>
+          <ul className="list-group">
+            {payments.map((payment, index) => (
+              <li key={index} className="list-group-item">{payment.month} - ₹{payment.amount} | {payment.status}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

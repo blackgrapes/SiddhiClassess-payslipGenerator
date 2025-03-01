@@ -3,6 +3,7 @@ import { Table, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import axios from "axios";
+import logo from "../assets/colorlogo.svg"; // ✅ Logo Import
 
 const TeacherList = () => {
   const navigate = useNavigate();
@@ -58,20 +59,24 @@ const TeacherList = () => {
 
   return (
     <div className="d-flex" style={{ backgroundColor: "#69360d", minHeight: "100vh" }}>
-      {/* Sidebar */}
+      
+      {/* ✅ Sidebar */}
       <div style={{ width: "320px", backgroundColor: "#492105", minHeight: "100vh" }}>
         <Sidebar />
       </div>
 
-      {/* Main Content */}
+      {/* ✅ Main Content */}
       <div className="container-fluid p-4" style={{ backgroundColor: "#e3dcc2", flexGrow: 1 }}>
         <div className="p-4 rounded shadow-lg" style={{ backgroundColor: "white" }}>
-          <h2 className="text-white p-3 rounded text-center" style={{ backgroundColor: "#69360d" }}>
-            Siddhi Classes - Teacher List
-          </h2>
 
-          {/* Search Bar and Add Teacher Button */}
-          <div className="d-flex justify-content-between mb-3">
+          {/* ✅ LOGO + Siddhi Classes (Brown Background) */}
+          <div className="text-center p-3 rounded" style={{ backgroundColor: "#69360d" }}>
+            <img src={logo} alt="Siddhi Classes Logo" style={{ height: "60px", marginBottom: "10px" }} />
+            <h2 className="text-white">Siddhi Classes - Teacher List</h2>
+          </div>
+
+          {/* ✅ Search Bar and Add Teacher Button */}
+          <div className="d-flex justify-content-between mb-3 mt-3">
             <div className="d-flex">
               <Form.Control
                 type="text"

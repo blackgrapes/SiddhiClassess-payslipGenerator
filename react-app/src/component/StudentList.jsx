@@ -3,6 +3,7 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import logo from "../assets/colorlogo.svg"; // ✅ Logo import
 
 const API_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
 
@@ -36,7 +37,7 @@ const StudentList = () => {
               pendingFees: student.totalFees - totalPaid,
             };
           } catch (error) {
-            console.error("Error fetching payment details for", student.rollNumber, error);
+            console.error("Error fetching payment details:", error);
             return {
               ...student,
               feesPaid: 0,
@@ -66,7 +67,7 @@ const StudentList = () => {
   };
 
   const handleSearch = () => {
-    setSearchQuery(searchQuery.trim()); // Extra spaces remove karne ke liye
+    setSearchQuery(searchQuery.trim());
   };
 
   const filteredStudents = students.filter((student) =>
@@ -82,14 +83,15 @@ const StudentList = () => {
 
       <div className="container-fluid p-4" style={{ backgroundColor: "#e3dcc2", flexGrow: 1 }}>
         <div className="p-4 rounded shadow-lg" style={{ backgroundColor: "white" }}>
-          <div className="d-flex align-items-center justify-content-between mb-3">
-            <h2 className="text-white p-3 rounded text-center" style={{ backgroundColor: "#69360d", width: "100%" }}>
-              Siddhi Classes - Student List
-            </h2>
+          
+          {/* ✅ LOGO + Siddhi Classes (Brown Background) */}
+          <div className="text-center p-3 rounded" style={{ backgroundColor: "#69360d" }}>
+            <img src={logo} alt="Siddhi Classes Logo" style={{ height: "60px", marginBottom: "10px" }} />
+            <h2 className="text-white">Siddhi Classes - Student List</h2>
           </div>
 
           {/* Search Bar + Search Button + Add Student Button */}
-          <div className="d-flex justify-content-between mb-3">
+          <div className="d-flex justify-content-between my-3">
             <div className="d-flex">
               <input
                 type="text"
@@ -102,10 +104,7 @@ const StudentList = () => {
                 Search
               </button>
             </div>
-            <button
-              onClick={() => navigate("/AddStudent")}
-              className="btn btn-success"
-            >
+            <button onClick={() => navigate("/AddStudent")} className="btn btn-success">
               Add Student
             </button>
           </div>
@@ -156,7 +155,7 @@ const StudentList = () => {
                         <Link to={`/Editstudent/${student.rollNumber}`} className="btn btn-sm btn-primary me-2">
                           Edit
                         </Link>
-                        <button onClick={() => handleDelete(student.rollNumber)} className="btn btn-sm btn-primary">
+                        <button onClick={() => handleDelete(student.rollNumber)} className="btn btn-sm btn-danger">
                           Delete
                         </button>
                       </td>

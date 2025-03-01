@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import "bootstrap/dist/css/bootstrap.min.css";
+import logo from "../assets/colorlogo.svg"; // ✅ Logo Import
 
 const API_URL = import.meta.env.VITE_APP_URL;
 
@@ -28,7 +29,7 @@ const StudentDashboard = () => {
       await axios.post("http://localhost:5000/student/add", studentData);
       setMessage("✅ Student added successfully!");
 
-      // ✅ Individually fields ko clear kiya
+      // ✅ Fields ko clear kiya
       setName("");
       setEmail("");
       setPhone("");
@@ -46,7 +47,7 @@ const StudentDashboard = () => {
   return (
     <div className="d-flex" style={{ height: "100vh", background: "linear-gradient(to bottom, #69360d, #e3dcc2)" }}>
       
-      {/* ✅ Sidebar - Fixed Height & No Scroll */}
+      {/* ✅ Sidebar */}
       <div
         style={{
           width: "300px",
@@ -65,9 +66,14 @@ const StudentDashboard = () => {
       <div className="d-flex justify-content-center align-items-center flex-grow-1 px-4">
         <div className="bg-light p-5 rounded" style={{ width: "1000px", boxShadow: "0 6px 12px rgba(0,0,0,0.2)" }}>
           
-          <h3 className="text-center mb-4 text-dark">Add New Student</h3>
-          
-          <form onSubmit={handleSubmit}>
+          {/* ✅ LOGO + Siddhi Classes (Brown Background) */}
+          <div className="text-center p-3 rounded" style={{ backgroundColor: "#69360d" }}>
+            <img src={logo} alt="Siddhi Classes Logo" style={{ height: "60px", marginBottom: "10px" }} />
+            <h3 className="text-white">Siddhi Classes - Add Student</h3>
+          </div>
+
+          {/* ✅ Student Form */}
+          <form onSubmit={handleSubmit} className="mt-3">
             <div className="row">
               <div className="col-md-6 mb-3">
                 <label className="form-label fw-bold">Name</label>
@@ -99,7 +105,7 @@ const StudentDashboard = () => {
               </div>
             </div>
 
-            {/* ✅ Submit Button with Spinner during Loading */}
+            {/* ✅ Submit Button with Loading Spinner */}
             <button className="btn btn-dark w-100 py-2" type="submit" disabled={loading}>
               {loading ? <span className="spinner-border spinner-border-sm"></span> : "Add Student"}
             </button>

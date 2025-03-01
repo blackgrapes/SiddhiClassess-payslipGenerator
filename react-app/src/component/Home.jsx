@@ -4,28 +4,30 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Ensure Bootstrap Icons are imported
 import homeImage from "../assets/home-image.svg";
+import logo from "../assets/colorlogo.svg"; // ✅ Logo Import
 
 const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="d-flex">
-      {/* Sidebar */}
-      <div style={{ minWidth: "50px" }}>
+    <div className="d-flex" style={{ minHeight: "100vh" }}>
+      {/* ✅ Fixed Sidebar */}
+      <div style={{ width: "300px", backgroundColor: "#4A1E08", height: "100vh", position: "fixed", left: 0, top: 0 }}>
         <Sidebar />
       </div>
 
-      {/* Main Content */}
-      <div className="flex-grow-1 p-4" style={{ backgroundColor: "#5B2A0F", minHeight: "100vh" }}>
+      {/* ✅ Main Content (with Sidebar space adjusted) */}
+      <div className="flex-grow-1 p-4" style={{ backgroundColor: "#5B2A0F", marginLeft: "300px", minHeight: "100vh" }}>
         <Container fluid>
-          {/* Top Bar */}
+          {/* ✅ Top Bar with Logo */}
           <Row className="mb-4">
-            <Col className="text-center" style={{ backgroundColor: "#E7D9B7", padding: "15px", borderRadius: "10px" }}>
+            <Col className="text-center p-3 rounded" style={{ backgroundColor: "#E7D9B7" }}>
+              <Image src={logo} alt="Siddhi Classes Logo" style={{ height: "60px", marginBottom: "10px" }} />
               <h4 className="fw-bold">Siddhi Classes</h4>
             </Col>
           </Row>
 
-          {/* Main Section */}
+          {/* ✅ Main Section */}
           <Row
             className="justify-content-center align-items-center text-center mt-5"
             style={{ backgroundColor: "#8C4A2F", borderRadius: "15px", padding: "50px 30px", color: "#fff" }}
@@ -52,7 +54,7 @@ const Home = () => {
             </Col>
           </Row>
 
-          {/* Image in a Separate Row Below */}
+          {/* ✅ Image Section */}
           <Row className="justify-content-center mt-5">
             <Col xs={12} className="text-center">
               <Image
