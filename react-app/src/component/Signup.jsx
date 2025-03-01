@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const URL = import.meta.env.VITE_APP_URL; // ✅ Ensure this is correctly set in .env file
 
 const SignupPage = () => {
-  // ✅ State for form inputs
+  const navigate = useNavigate(); // ✅ Initialize navigate function
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -12,41 +13,35 @@ const SignupPage = () => {
     password: "",
   });
 
-  // ✅ State for loading & error
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // ✅ Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ✅ Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); 
+    setLoading(true);
     setMessage("");
 
     try {
       const response = await fetch(`${URL}/admin/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          dob: formData.dob,
-        }),
+        body: JSON.stringify(formData),
       });
 
-      // ✅ Read response text first to avoid JSON parsing error
       const text = await response.text();
-      const data = text ? JSON.parse(text) : {}; // If empty, return empty object
+      const data = text ? JSON.parse(text) : {};
 
       if (!response.ok) throw new Error(data.message || "Signup failed");
 
-      setMessage("Signup successful! 🎉");
+      setMessage("Signup successful! Redirecting to login... 🎉");
       setFormData({ name: "", email: "", dob: "", password: "" });
+
+      // ✅ Redirect to login page after 2 seconds
+      setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
       setMessage(error.message || "An error occurred.");
     }
@@ -63,7 +58,6 @@ const SignupPage = () => {
         className="bg-light p-4 rounded"
         style={{ width: "400px", boxShadow: "0 4px 8px rgba(0,0,0,0.2)" }}
       >
-        {/* ✅ Logo & Header */}
         <div
           className="text-center position-relative mb-3"
           style={{
@@ -72,13 +66,11 @@ const SignupPage = () => {
             borderRadius: "10px 10px 0 0",
           }}
         >
-          <img src="/logo.png" alt="logo" style={{ width: "40px" }} />
           <h4 className="text-white mt-2">Siddhi Classes</h4>
         </div>
 
         <h5 className="text-center mb-3">Create New Account</h5>
 
-        {/* ✅ Signup Form */}
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <input
@@ -104,7 +96,6 @@ const SignupPage = () => {
             />
           </div>
 
-          {/* ✅ Date of Birth Input */}
           <div className="mb-3">
             <input
               type="date"
@@ -128,12 +119,10 @@ const SignupPage = () => {
             />
           </div>
 
-          {/* ✅ Submit Button */}
           <button className="btn btn-dark w-100" type="submit" disabled={loading}>
             {loading ? "Signing Up..." : "Sign Up"}
           </button>
 
-          {/* ✅ Message Box */}
           {message && <p className="text-center mt-3 text-danger">{message}</p>}
         </form>
       </div>

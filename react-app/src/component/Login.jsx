@@ -1,16 +1,17 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaUser, FaLock } from "react-icons/fa";
-; // Ensure correct path
 
 const Login = () => {
-  const navigate = useNavigate(); // For navigation
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevents page reload
+    e.preventDefault();
     console.log("Login Form Submitted");
-    // Add authentication logic here
+
+    // 🔹 Authentication Logic (API call ya local validation)
+    navigate("/Home");
   };
 
   return (
@@ -25,7 +26,7 @@ const Login = () => {
           boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
         }}
       >
-        {/* Logo & Header */}
+        {/* Header (Logo Removed) */}
         <div
           className="text-center position-relative mb-3"
           style={{
@@ -34,8 +35,7 @@ const Login = () => {
             borderRadius: "10px 10px 0 0",
           }}
         >
-          <img src={logo} alt="Logo" style={{ width: "50px" }} />
-          <h4 className="text-white mt-2">Siddhi Classes</h4>
+          <h4 className="text-white mt-2">Login</h4>
         </div>
 
         {/* Login Form */}
@@ -63,15 +63,17 @@ const Login = () => {
             <button
               type="button"
               className="btn btn-link text-dark p-0"
-              onClick={() => navigate("/forgot-password")} // ✅ Navigate to Forgot Password
+              onClick={() => navigate("/forgot-password")}
             >
               Forgot Password?
             </button>
           </div>
 
           {/* Login Button */}
-          <button type="submit" className="btn btn-dark w-100">LOGIN</button>
-          onClick={() => navigate("/Dashboard")} 
+          <button type="submit" className="btn btn-dark w-100">
+            LOGIN
+          </button>
+
           {/* Create Account */}
           <div className="text-center mt-3">
             <button
