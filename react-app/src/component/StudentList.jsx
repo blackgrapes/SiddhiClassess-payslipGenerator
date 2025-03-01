@@ -10,6 +10,7 @@ const StudentList = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,8 +27,7 @@ const StudentList = () => {
               `${API_URL}/student/${student.rollNumber}/payments`
             );
             const totalPaid = paymentResponse.data.payments.reduce(
-              (sum, payment) =>
-                payment.status === "Paid" ? sum + payment.amount : sum,
+              (sum, payment) => (payment.status === "Paid" ? sum + payment.amount : sum),
               0
             );
             return {
@@ -36,11 +36,7 @@ const StudentList = () => {
               pendingFees: student.totalFees - totalPaid,
             };
           } catch (error) {
-            console.error(
-              "Error fetching payment details for",
-              student.rollNumber,
-              error
-            );
+            console.error("Error fetching payment details for", student.rollNumber, error);
             return {
               ...student,
               feesPaid: 0,
@@ -69,34 +65,43 @@ const StudentList = () => {
     }
   };
 
+  const filteredStudents = students.filter((student) =>
+    student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    student.rollNumber.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="d-flex" style={{ backgroundColor: "#69360d", minHeight: "100vh" }}>
-      {/* Sidebar */}
       <div style={{ width: "320px", backgroundColor: "#492105", minHeight: "100vh" }}>
         <Sidebar />
       </div>
 
-      {/* Main Content */}
       <div className="container-fluid p-4" style={{ backgroundColor: "#e3dcc2", flexGrow: 1 }}>
         <div className="p-4 rounded shadow-lg" style={{ backgroundColor: "white" }}>
-          {/* Header */}
-          <div className="d-flex align-items-center justify-content-between mb-4">
+          <div className="d-flex align-items-center justify-content-between mb-3">
             <h2 className="text-white p-3 rounded text-center" style={{ backgroundColor: "#69360d", width: "100%" }}>
               Siddhi Classes - Student List
             </h2>
+          </div>
+
+          <div className="d-flex justify-content-between mb-3">
+            <input
+              type="text"
+              className="form-control w-50"
+              placeholder="Search by name or roll number..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
             <button
               onClick={() => navigate("/AddStudent")}
-              className="btn btn-success btn-sm px-3 py-1 shadow-sm"
-              style={{ fontWeight: "bold", borderRadius: "4px", transition: "0.3s" }}
+              className="btn btn-primary btn-sm px-3 py-1 shadow-sm"
             >
               Add Student
             </button>
           </div>
 
-          {/* Error Message */}
           {error && <div className="alert alert-danger text-center">{error}</div>}
 
-          {/* Student Table */}
           <div className="table-responsive">
             <table className="table table-bordered text-center">
               <thead className="text-white" style={{ backgroundColor: "#69360d" }}>
@@ -114,18 +119,18 @@ const StudentList = () => {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="9" className="text-center">
+                    <td colSpan="8" className="text-center">
                       <div className="spinner-border text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>
                       </div>
                     </td>
                   </tr>
-                ) : students.length === 0 ? (
+                ) : filteredStudents.length === 0 ? (
                   <tr>
-                    <td colSpan="9" className="text-center">No students found</td>
+                    <td colSpan="8" className="text-center">No students found</td>
                   </tr>
                 ) : (
-                  students.map((student) => (
+                  filteredStudents.map((student) => (
                     <tr key={student.rollNumber}>
                       <td>{student.name}</td>
                       <td>{student.rollNumber}</td>
@@ -135,25 +140,13 @@ const StudentList = () => {
                       <td>₹{student.feesPaid}</td>
                       <td>₹{student.pendingFees}</td>
                       <td>
-                        {/* Payment Slip Button */}
-                        <Link to={`/StudentPayment/${student.rollNumber}`} className="btn btn-sm btn-info me-2">
+                        <Link to={`/StudentPayment/${student.rollNumber}`} className="btn btn-sm btn-primary me-2">
                           Payment Slip
                         </Link>
-
-                        {/* Edit Button */}
-                        <Link
-                          to={`/Editstudent/${student.rollNumber}`}
-                          className="btn btn-sm btn-warning me-2"
-                        >
+                        <Link to={`/Editstudent/${student.rollNumber}`} className="btn btn-sm btn-primary me-2">
                           Edit
-                         
                         </Link>
-
-                        {/* Delete Button */}
-                        <button
-                          onClick={() => handleDelete(student.rollNumber)}
-                          className="btn btn-sm btn-danger"
-                        >
+                        <button onClick={() => handleDelete(student.rollNumber)} className="btn btn-sm btn-primary">
                           Delete
                         </button>
                       </td>
