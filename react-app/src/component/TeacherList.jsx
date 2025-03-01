@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import axios from "axios";
@@ -7,31 +7,49 @@ import axios from "axios";
 const TeacherList = () => {
   const navigate = useNavigate();
   const [teachers, setTeachers] = useState([]);
+  const [filteredTeachers, setFilteredTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch teachers from the backend
   useEffect(() => {
-    const fetchTeachers = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/teacher/all");
-        setTeachers(response.data);
-      } catch (error) {
-        setError("Failed to fetch teacher data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchTeachers();
   }, []);
 
-  // Delete Teacher Function
+  const fetchTeachers = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/teacher/all");
+      setTeachers(response.data);
+      setFilteredTeachers(response.data);
+    } catch (error) {
+      setError("Failed to fetch teacher data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Search Function
+  const handleSearch = () => {
+    const filtered = teachers.filter(
+      (teacher) =>
+        teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        teacher.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        teacher.phone.includes(searchTerm)
+    );
+    setFilteredTeachers(filtered);
+  };
+
+  // Delete Teacher
   const handleDelete = async (email) => {
     if (window.confirm("Are you sure you want to delete this teacher?")) {
       try {
-        await axios.delete(`http://localhost:5000/teacher/delete/${email}`);
-        setTeachers(teachers.filter((teacher) => teacher.email !== email));
+        await axios.delete(`http://localhost:5000/teacher/${email}/delete`); // ✅ Correct API route
+
+        // Update the state properly
+        setTeachers((prevTeachers) => prevTeachers.filter((teacher) => teacher.email !== email));
+        setFilteredTeachers((prevFiltered) => prevFiltered.filter((teacher) => teacher.email !== email));
+
+        alert("Teacher deleted successfully!");
       } catch (error) {
         alert("Failed to delete teacher.");
       }
@@ -48,30 +66,27 @@ const TeacherList = () => {
       {/* Main Content */}
       <div className="container-fluid p-4" style={{ backgroundColor: "#e3dcc2", flexGrow: 1 }}>
         <div className="p-4 rounded shadow-lg" style={{ backgroundColor: "white" }}>
-          <div className="d-flex align-items-center justify-content-between mb-4">
-            <h2
-              className="text-white p-3 rounded"
-              style={{
-                backgroundColor: "#69360d",
-                width: "100%",
-                textAlign: "center",
-              }}
-            >
-              Siddhi Classes - Teacher List
-            </h2>
+          <h2 className="text-white p-3 rounded text-center" style={{ backgroundColor: "#69360d" }}>
+            Siddhi Classes - Teacher List
+          </h2>
 
-            <button
-              onClick={() => navigate("/AddTeacher")}
-              className="btn btn-success btn-sm px-3 py-1 shadow-sm"
-              style={{
-                fontWeight: "bold",
-                borderRadius: "4px",
-                transition: "0.3s",
-                marginLeft: "auto",
-              }}
-            >
+          {/* Search Bar and Add Teacher Button */}
+          <div className="d-flex justify-content-between mb-3">
+            <div className="d-flex">
+              <Form.Control
+                type="text"
+                placeholder="Search by Name, Email, or Phone..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="me-2"
+              />
+              <Button variant="primary" onClick={handleSearch}>
+                Search
+              </Button>
+            </div>
+            <Button variant="success" onClick={() => navigate("/AddTeacher")}>
               Add Teacher
-            </button>
+            </Button>
           </div>
 
           {loading ? (
@@ -95,43 +110,51 @@ const TeacherList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {teachers.map((teacher, index) => (
-                    <tr key={teacher.email}>
-                      <td>{index + 1}</td>
-                      <td>{teacher.name}</td>
-                      <td>{teacher.email}</td>
-                      <td>{teacher.phone}</td>
-                      <td>{teacher.designation}</td>
-                      <td>₹{teacher.salary}</td>
-                      <td>
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          onClick={() => navigate(`/TeacherPayslip/${teacher.email}`)}
-                        >
-                          Payslip
-                        </Button>
-                      </td>
-                      <td>
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          onClick={() => navigate(`/UpdateTeacher/${teacher.email}`)}
-                        >
-                          Update
-                        </Button>
-                      </td>
-                      <td>
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          onClick={() => handleDelete(teacher.email)}
-                        >
-                          Delete
-                        </Button>
+                  {filteredTeachers.length === 0 ? (
+                    <tr>
+                      <td colSpan="9" className="text-center">
+                        No teachers found.
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    filteredTeachers.map((teacher, index) => (
+                      <tr key={teacher.email}>
+                        <td>{index + 1}</td>
+                        <td>{teacher.name}</td>
+                        <td>{teacher.email}</td>
+                        <td>{teacher.phone}</td>
+                        <td>{teacher.designation}</td>
+                        <td>₹{teacher.salary}</td>
+                        <td>
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={() => navigate(`/TeacherPayslip/${teacher.email}`)}
+                          >
+                            Payslip
+                          </Button>
+                        </td>
+                        <td>
+                          <Button
+                            variant="warning"
+                            size="sm"
+                            onClick={() => navigate(`/editTeacher/${teacher.email}`)}
+                          >
+                            Edit
+                          </Button>
+                        </td>
+                        <td>
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() => handleDelete(teacher.email)}
+                          >
+                            Delete
+                          </Button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </Table>
             </div>
