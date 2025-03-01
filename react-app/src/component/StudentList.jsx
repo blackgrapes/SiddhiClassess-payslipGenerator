@@ -89,7 +89,7 @@ const StudentList = () => {
               className="btn btn-success btn-sm px-3 py-1 shadow-sm"
               style={{ fontWeight: "bold", borderRadius: "4px", transition: "0.3s" }}
             >
-              ➕ Add Student
+              Add Student
             </button>
           </div>
 
@@ -137,7 +137,7 @@ const StudentList = () => {
                       <td>
                         {/* Payment Slip Button */}
                         <Link to={`/StudentPayment/${student.rollNumber}`} className="btn btn-sm btn-info me-2">
-                          📄 Payment Slip
+                          Payment Slip
                         </Link>
 
                         {/* Edit Button */}
@@ -145,7 +145,7 @@ const StudentList = () => {
                           to={`/Editstudent/${student.rollNumber}`}
                           className="btn btn-sm btn-warning me-2"
                         >
-                          ✏️ Edit
+                          Edit
                          
                         </Link>
 
@@ -154,7 +154,7 @@ const StudentList = () => {
                           onClick={() => handleDelete(student.rollNumber)}
                           className="btn btn-sm btn-danger"
                         >
-                          🗑️ Delete
+                          Delete
                         </button>
                       </td>
                     </tr>

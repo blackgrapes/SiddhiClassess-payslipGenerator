@@ -29,7 +29,7 @@ function App() {
         <Route path="/teacherList" element={<TeacherList />} />
         <Route path="/StudentPayment/:rollNumber" element={<StudentPayslip/>} />
         <Route path="/addteacher" element={<AddTeacher/>} />
-        <Route path="/TeacherPayslip" element={<TeacherPayslip/>} />
+        <Route path="/TeacherPayslip/:email" element={<TeacherPayslip/>} />
         <Route path="/Editstudent/:rollNumber" element={<Editstudent/>} />
       </Routes>
     </Router>

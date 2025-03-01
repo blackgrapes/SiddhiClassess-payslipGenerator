@@ -70,7 +70,7 @@ const TeacherList = () => {
                 marginLeft: "auto",
               }}
             >
-              + Add
+              Add Teacher
             </button>
           </div>
 
