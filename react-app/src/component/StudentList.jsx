@@ -65,6 +65,10 @@ const StudentList = () => {
     }
   };
 
+  const handleSearch = () => {
+    setSearchQuery(searchQuery.trim()); // Extra spaces remove karne ke liye
+  };
+
   const filteredStudents = students.filter((student) =>
     student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     student.rollNumber.toLowerCase().includes(searchQuery.toLowerCase())
@@ -84,17 +88,23 @@ const StudentList = () => {
             </h2>
           </div>
 
+          {/* Search Bar + Search Button + Add Student Button */}
           <div className="d-flex justify-content-between mb-3">
-            <input
-              type="text"
-              className="form-control w-50"
-              placeholder="Search by name or roll number..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+            <div className="d-flex">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search by name or roll number..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button onClick={handleSearch} className="btn btn-primary ms-2">
+                Search
+              </button>
+            </div>
             <button
               onClick={() => navigate("/AddStudent")}
-              className="btn btn-primary btn-sm px-3 py-1 shadow-sm"
+              className="btn btn-success"
             >
               Add Student
             </button>

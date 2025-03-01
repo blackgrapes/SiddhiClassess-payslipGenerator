@@ -43,7 +43,7 @@ const TeacherList = () => {
   const handleDelete = async (email) => {
     if (window.confirm("Are you sure you want to delete this teacher?")) {
       try {
-        await axios.delete(`http://localhost:5000/teacher/${email}/delete`); // ✅ Correct API route
+        await axios.delete(`http://localhost:5000/teacher/${email}/delete`);
 
         // Update the state properly
         setTeachers((prevTeachers) => prevTeachers.filter((teacher) => teacher.email !== email));
@@ -136,7 +136,7 @@ const TeacherList = () => {
                         </td>
                         <td>
                           <Button
-                            variant="warning"
+                            variant="primary"
                             size="sm"
                             onClick={() => navigate(`/editTeacher/${teacher.email}`)}
                           >
@@ -145,7 +145,7 @@ const TeacherList = () => {
                         </td>
                         <td>
                           <Button
-                            variant="danger"
+                            variant="primary"
                             size="sm"
                             onClick={() => handleDelete(teacher.email)}
                           >
