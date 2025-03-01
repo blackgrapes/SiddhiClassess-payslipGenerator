@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import jsPDF from "jspdf";
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import logopng from "/src/assets/logopng.png"; // Ensure this path is correct
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Sidebar from "./Sidebar";
+
 const API_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
 
 const StudentPayslip = () => {
@@ -20,6 +22,7 @@ const StudentPayslip = () => {
   useEffect(() => {
     fetchStudentDetails();
   }, []);
+
   const fetchStudentDetails = async () => {
     try {
       const res = await axios.get(`${API_URL}/student/${rollNumber}`);
@@ -64,77 +67,143 @@ const StudentPayslip = () => {
     }
   };
 
-  const generatePDF = () => {
-    if (!student || payments.length === 0) {
-      setMessage("❌ Cannot generate PDF. Missing student details or payments.");
-      return;
+  const generatePDF = async () => {
+    try {
+      if (!student || payments.length === 0) {
+        setMessage("❌ Cannot generate PDF. Missing student details or payments.");
+        return;
+      }
+  
+      console.log("Generating PDF for student:", student); // Debugging
+      console.log("Payments:", payments); // Debugging
+  
+      const pdfDoc = await PDFDocument.create();
+      const page = pdfDoc.addPage([600, 800]); // A4 size equivalent
+      const { width, height } = page.getSize();
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  
+      let yPosition = height - 20; // Start from the top with a 20px margin
+  
+      const drawText = (text, x, y, size = 12, align = "left") => {
+        const textWidth = font.widthOfTextAtSize(text, size);
+        const xPos = align === "center" ? width / 2 - textWidth / 2 : x;
+        page.drawText(text, { x: xPos, y, size, font, color: rgb(0, 0, 0) });
+      };
+  
+      const drawLine = (y) => {
+        page.drawLine({
+          start: { x: 50, y },
+          end: { x: width - 50, y },
+          thickness: 1,
+          color: rgb(0, 0, 0),
+        });
+      };
+  
+      // Load the logo image from the assets folder
+      const logoUrl = logopng; // Use the imported logo
+      const logoResponse = await fetch(logoUrl);
+      const logoArrayBuffer = await logoResponse.arrayBuffer();
+      const logoImage = await pdfDoc.embedPng(logoArrayBuffer);
+  
+      // Draw the logo at the center top (scaled down)
+      const logoDims = logoImage.scale(0.1); // Scale down the logo
+      const logoX = width / 2 - logoDims.width / 2; // Center the logo horizontally
+      const logoY = yPosition - logoDims.height; // Position below the top margin
+      page.drawImage(logoImage, {
+        x: logoX,
+        y: logoY,
+        width: logoDims.width,
+        height: logoDims.height,
+      });
+  
+      // Adjust yPosition to account for the logo
+      yPosition -= logoDims.height + 20; // Add some spacing below the logo
+  
+      // Address (Centered and Separated)
+      drawText("FLAT NO 702 SARTHAK GALAXY -02,behind IIM College,Rau Indore", 0, yPosition, 12, "center");
+      yPosition -= 15;
+  
+      // Contact Details
+      drawText("Phone: 9876543210 | Email: info@coaching.com", 0, yPosition, 10, "center");
+      yPosition -= 30; // Extra space before the first section
+  
+    
+  
+      // Student Details Heading
+      drawText("Student Details", 0, yPosition, 14, "center");
+      yPosition -= 20;
+
+        // Line separator
+        drawLine(yPosition);
+        yPosition -= 20;
+  
+      // Student Details
+      drawText(`Name: ${student.name || "N/A"}`, 50, yPosition);
+      drawText(`Roll Number: ${student.rollNumber || "N/A"}`, width / 2 + 20, yPosition);
+      yPosition -= 15;
+  
+      drawText(`Class: ${student.class || "N/A"}`, 50, yPosition);
+      drawText(`Phone: ${student.phone || "N/A"}`, width / 2 + 20, yPosition);
+      yPosition -= 15;
+  
+      drawText(`Total Fees: ${student.totalFees || 0}`, 50, yPosition);
+      const totalPaid = payments.reduce((sum, payment) => sum + Number(payment.amount), 0);
+      drawText(`Fees Paid: ${totalPaid}`, width / 2 + 20, yPosition);
+      yPosition -= 15;
+  
+      const remainingBalance = student.totalFees - totalPaid;
+      drawText(`Pending Fees: ${remainingBalance}`, 50, yPosition);
+      yPosition -= 20;
+  
+      
+  
+      // Payment History Heading
+      drawText("Payment History", 0, yPosition, 14, "center");
+      yPosition -= 20;
+
+      // Line separator
+      drawLine(yPosition);
+      yPosition -= 20;
+  
+      // Payment History
+      if (payments.length > 0) {
+        payments.forEach((payment, index) => {
+          drawText(
+            `${index + 1}. ${payment.month || "N/A"} - ${payment.amount || 0} | ${payment.status || "N/A"} | ${new Date(payment.payDate).toLocaleDateString() || "N/A"}`,
+            50,
+            yPosition
+          );
+          yPosition -= 15;
+        });
+      } else {
+        drawText("No payment history found.", 50, yPosition);
+        yPosition -= 15;
+      }
+  
+      // Line separator
+      drawLine(yPosition);
+      yPosition -= 20;
+  
+      // Date and Signature Section
+      drawText("Date: ___________________________", 50, yPosition, 12);
+      yPosition -= 40; // Space for signature
+      drawText("Signature: ________________________", 50, yPosition, 12);
+  
+      // Save and Download PDF
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `Student_Payslip_${student.rollNumber}.pdf`;
+      document.body.appendChild(link); // Append the link to the DOM
+      link.click(); // Trigger the download
+      document.body.removeChild(link); // Clean up
+  
+      console.log("PDF generated and downloaded successfully!"); // Debugging
+    } catch (error) {
+      console.error("Error generating PDF:", error); // Debugging
+      setMessage("❌ Failed to generate PDF. See console for details.");
     }
-
-    const pdf = new jsPDF("p", "mm", "a4");
-    const margin = 15;
-    let y = 20;
-
-    const totalPaid = payments.reduce((sum, payment) => sum + Number(payment.amount), 0);
-    const remainingBalance = student.totalFees - totalPaid;
-
-    pdf.setFont("times", "bold");
-    pdf.setFontSize(18);
-    pdf.text("Student Payslip", 85, y);
-    y += 12;
-
-    pdf.setFont("times", "normal");
-    pdf.setFontSize(12);
-    pdf.text("Coaching Institute Name", margin, y);
-    y += 5;
-    pdf.text("Address: XYZ, City, State, ZIP", margin, y);
-    y += 5;
-    pdf.text("Phone: 9876543210 | Email: info@coaching.com", margin, y);
-    y += 10;
-
-    pdf.setLineWidth(0.5);
-    pdf.line(margin, y, 200, y);
-    y += 10;
-
-    pdf.setFont("times", "bold");
-    pdf.setFontSize(14);
-    pdf.text("Student Details", margin, y);
-    y += 8;
-
-    pdf.setFont("times", "normal");
-    pdf.setFontSize(12);
-    pdf.text(`Name: ${student.name}`, margin, y);
-    pdf.text(`Roll Number: ${student.rollNumber}`, 120, y);
-    y += 7;
-    pdf.text(`Class: ${student.class}`, margin, y);
-    pdf.text(`Phone: ${student.phone}`, 120, y);
-    y += 7;
-    pdf.text(`Total Fees: ₹${student.totalFees}`, margin, y);
-    pdf.text(`Fees Paid: ₹${totalPaid}`, 120, y);
-    y += 7;
-    pdf.text(`Pending Fees: ₹${remainingBalance}`, margin, y);
-    y += 10;
-
-    pdf.setLineWidth(0.5);
-    pdf.line(margin, y, 200, y);
-    y += 10;
-
-    pdf.setFont("times", "bold");
-    pdf.setFontSize(14);
-    pdf.text("Payment History", margin, y);
-    y += 8;
-
-    pdf.setFont("times", "normal");
-    pdf.setFontSize(12);
-    payments.forEach((payment, index) => {
-      pdf.text(
-        `${index + 1}. ${payment.month} - ₹${payment.amount} | ${payment.status} | ${new Date(payment.payDate).toLocaleDateString()}`,
-        margin,
-        y
-      );
-      y += 7;
-    });
-
-    pdf.save(`Student_Payslip_${student.rollNumber}.pdf`);
   };
 
   return (
@@ -144,7 +213,7 @@ const StudentPayslip = () => {
         <div className="col-md-3 col-lg-2 bg-dark text-white min-vh-100 position-fixed">
           <Sidebar />
         </div>
-     
+
         {/* Main Content */}
         <div className="col-md-9 col-lg-10 offset-md-3 offset-lg-2 p-4">
           <h3 className="text-center" style={{ color: "#69360d" }}>Student Payslip</h3>
