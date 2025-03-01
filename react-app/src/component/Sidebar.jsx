@@ -51,7 +51,7 @@ const Sidebar = () => {
         <Button
           className="w-100 text-light"
           style={{ backgroundColor: "#5B2A0F", border: "none" }}
-          onClick={() => navigate("/logout")} // ✅ Navigate on click
+          onClick={() => navigate("/")} // ✅ Navigate on click
         >
           LOGOUT
         </Button>

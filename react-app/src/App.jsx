@@ -21,7 +21,7 @@ function App() {
   return (
     <Router> {/* ✅ BrowserRouter added here */}
       <Routes>
-        <Route path="/login" element={<Login/>} />
+        <Route path="/" element={<Login/>} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/Home" element={<Home />} />
