@@ -27,11 +27,11 @@ const TeacherList = () => {
   }, []);
 
   // Delete Teacher Function
-  const handleDelete = async (id) => {
+  const handleDelete = async (email) => {
     if (window.confirm("Are you sure you want to delete this teacher?")) {
       try {
-        await axios.delete(`http://localhost:5000/teacher/delete/${id}`);
-        setTeachers(teachers.filter((teacher) => teacher._id !== id));
+        await axios.delete(`http://localhost:5000/teacher/delete/${email}`);
+        setTeachers(teachers.filter((teacher) => teacher.email !== email));
       } catch (error) {
         alert("Failed to delete teacher.");
       }
@@ -96,7 +96,7 @@ const TeacherList = () => {
                 </thead>
                 <tbody>
                   {teachers.map((teacher, index) => (
-                    <tr key={teacher._id}>
+                    <tr key={teacher.email}>
                       <td>{index + 1}</td>
                       <td>{teacher.name}</td>
                       <td>{teacher.email}</td>
@@ -107,7 +107,7 @@ const TeacherList = () => {
                         <Button
                           variant="primary"
                           size="sm"
-                          onClick={() => navigate(`/Payslip/${teacher._id}`)}
+                          onClick={() => navigate(`/TeacherPayslip/${teacher.email}`)}
                         >
                           Payslip
                         </Button>
@@ -116,7 +116,7 @@ const TeacherList = () => {
                         <Button
                           variant="primary"
                           size="sm"
-                          onClick={() => navigate(`/UpdateTeacher/${teacher._id}`)}
+                          onClick={() => navigate(`/UpdateTeacher/${teacher.email}`)}
                         >
                           Update
                         </Button>
@@ -125,7 +125,7 @@ const TeacherList = () => {
                         <Button
                           variant="primary"
                           size="sm"
-                          onClick={() => handleDelete(teacher._id)}
+                          onClick={() => handleDelete(teacher.email)}
                         >
                           Delete
                         </Button>
