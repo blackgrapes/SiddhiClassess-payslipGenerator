@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaUser, FaLock } from "react-icons/fa";
+import logo from "../assets/colorlogo.svg"; // 🔹 Logo import kiya
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,15 +27,27 @@ const Login = () => {
           boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
         }}
       >
-        {/* Header (Logo Removed) */}
+        {/* 🔹 Logo + Header */}
         <div
           className="text-center position-relative mb-3"
           style={{
             backgroundColor: "#69360d",
             padding: "20px 0",
             borderRadius: "10px 10px 0 0",
+            position: "relative",
           }}
         >
+          <img
+            src={logo}
+            alt="Logo"
+            style={{
+              width: "100px",
+              position: "absolute",
+              top: "-40px",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          />
           <h4 className="text-white mt-2">Login</h4>
         </div>
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
 import "bootstrap/dist/css/bootstrap.min.css";
+import logo from "../assets/colorlogo.svg"; // 🔹 Logo import kiya
 
 const URL = import.meta.env.VITE_APP_URL; // ✅ Ensure this is correctly set in .env file
 
@@ -58,14 +59,27 @@ const SignupPage = () => {
         className="bg-light p-4 rounded"
         style={{ width: "400px", boxShadow: "0 4px 8px rgba(0,0,0,0.2)" }}
       >
+        {/* 🔹 Logo + Header */}
         <div
           className="text-center position-relative mb-3"
           style={{
             backgroundColor: "#69360d",
             padding: "20px 0",
             borderRadius: "10px 10px 0 0",
+            position: "relative",
           }}
         >
+          <img
+            src={logo}
+            alt="Logo"
+            style={{
+              width: "100px",
+              position: "absolute",
+              top: "-40px",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          />
           <h4 className="text-white mt-2">Siddhi Classes</h4>
         </div>
 
