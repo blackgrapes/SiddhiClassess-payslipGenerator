@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import logopng from "/src/assets/logopng.png"; // Ensure this path is correct
+import Sidebar from "./Sidebar"; // Sidebar ko import kiya gaya hai
 
 const API_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
 
@@ -154,21 +155,22 @@ const TeacherPayslip = () => {
       setLoading(false);
     }
   };
+
   const generatePDF = async (teacher = {}, newPayslip = {}, payslips = []) => {
     try {
       const pdfDoc = await PDFDocument.create();
       const page = pdfDoc.addPage([600, 800]);
       const { width, height } = page.getSize();
       const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  
+
       let yPosition = height - 4; // 4px margin at the top
-  
+
       const drawText = (text, x, y, size = 12, align = "left") => {
         const textWidth = font.widthOfTextAtSize(text, size);
         const xPos = align === "center" ? width / 2 - textWidth / 2 : x;
         page.drawText(text, { x: xPos, y, size, font, color: rgb(0, 0, 0) });
       };
-  
+
       const drawLine = (y) => {
         page.drawLine({
           start: { x: 50, y },
@@ -177,13 +179,13 @@ const TeacherPayslip = () => {
           color: rgb(0, 0, 0),
         });
       };
-  
+
       // Load the logo image from the assets folder
       const logoUrl = logopng; // Use the imported logo
       const logoResponse = await fetch(logoUrl);
       const logoArrayBuffer = await logoResponse.arrayBuffer();
       const logoImage = await pdfDoc.embedPng(logoArrayBuffer);
-  
+
       // Draw the logo at the center top (8x8 pixels)
       const logoDims = logoImage.scale(0.1); // Scale down to 8x8 pixels
       const logoX = width / 2 - logoDims.width / 2; // Center the logo horizontally
@@ -194,10 +196,10 @@ const TeacherPayslip = () => {
         width: logoDims.width,
         height: logoDims.height,
       });
-  
+
       // Adjust yPosition to account for the logo
       yPosition -= logoDims.height + 20; // Add some spacing below the logo
-  
+
       // Address (Centered and Separated)
       drawText(
         "FLAT NO.702 SARTHAK GALAXY -02, behind IIM COLLEGE, RAU INDORE",
@@ -207,11 +209,11 @@ const TeacherPayslip = () => {
         "center"
       );
       yPosition -= 20; // Space below the address
-  
+
       // Contact Details
       drawText("Phone: 9876543210 | Email: info@coaching.com", 0, yPosition, 10, "center");
       yPosition -= 30; // Extra space before the first section
-  
+
       // Teacher Details
       drawText("Teacher Details", 0, yPosition, 12, "center");
       yPosition -= 20; // Space above the line
@@ -225,7 +227,7 @@ const TeacherPayslip = () => {
       yPosition -= 15;
       drawText(`Salary: Rs. ${teacher?.salary || "N/A"}`, 50, yPosition);
       yPosition -= 30; // Extra space before the next section
-  
+
       // Payslip Details
       drawText("Payslip Details", 0, yPosition, 12, "center");
       yPosition -= 20; // Space above the line
@@ -239,7 +241,7 @@ const TeacherPayslip = () => {
       yPosition -= 15;
       drawText(`Pay Date: ${newPayslip?.payDate || "N/A"}`, 50, yPosition);
       yPosition -= 30; // Extra space before the next section
-  
+
       // Earnings
       const earnings = newPayslip?.earnings || {};
       drawText("Earnings", 0, yPosition, 12, "center");
@@ -252,7 +254,7 @@ const TeacherPayslip = () => {
       yPosition -= 15;
       drawText(`Other Benefits: Rs. ${earnings.otherBenefits || 0}`, 50, yPosition);
       yPosition -= 30; // Extra space before the next section
-  
+
       // Deductions
       const deductions = newPayslip?.deductions || {};
       drawText("Deductions", 0, yPosition, 12, "center");
@@ -265,13 +267,13 @@ const TeacherPayslip = () => {
       yPosition -= 15;
       drawText(`Other Deductions: Rs. ${deductions.otherDeductions || 0}`, 50, yPosition);
       yPosition -= 30; // Extra space before the next section
-  
+
       // Net Pay
       drawText(`Net Pay: Rs. ${newPayslip?.netPay || 0}`, 0, yPosition, 14, "center");
       yPosition -= 30; // Extra space before the next section
       drawLine(yPosition); // Line partition
       yPosition -= 20; // Space below the line
-  
+
       // Payment History
       drawText("Payment History", 0, yPosition, 12, "center");
       yPosition -= 20; // Space above the line
@@ -292,12 +294,12 @@ const TeacherPayslip = () => {
         yPosition -= 15;
       }
       yPosition -= 20; // Extra space before the signature section
-  
+
       // Date and Signature Section (Professional Format)
       drawText("Date: ___________________________", 50, yPosition, 12);
       yPosition -= 40; // Space for signature
       drawText("Signature: ________________________", 50, yPosition, 12);
-  
+
       // Save and Download PDF
       const pdfBytes = await pdfDoc.save();
       downloadPDF(pdfBytes);
@@ -306,6 +308,7 @@ const TeacherPayslip = () => {
       alert("Failed to generate PDF. See console for details.");
     }
   };
+
   const downloadPDF = (pdfBytes) => {
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
@@ -320,135 +323,171 @@ const TeacherPayslip = () => {
   };
 
   return (
-    <div className="container mt-4">
-      <h3>Teacher Payslip</h3>
+    <div style={{ display: "flex", minHeight: "100vh" }}>
+      {/* Sidebar */}
+      <div style={{ 
+        width: "250px", 
+        backgroundColor: "#69360d", 
+        color: "#e3dcc2", 
+        padding: "20px", 
+        position: "fixed", // Sidebar ko fixed kiya gaya hai
+        height: "100vh", // Full height
+        overflowY: "hidden", // Scrolling disabled
+        display: "flex", 
+        flexDirection: "column", 
+        justifyContent: "center", // Content ko vertically center kiya gaya hai
+        alignItems: "center", // Content ko horizontally center kiya gaya hai
+      }}>
+        <Sidebar />
+      </div>
 
-      {fetching ? (
-        <p>Loading teacher details...</p>
-      ) : teacher ? (
-        <>
-          <div className="card p-3 mt-3">
-            <h5>Teacher Details</h5>
-            <p>
-              <strong>Name:</strong> {teacher.name}
-            </p>
-            <p>
-              <strong>Phone:</strong> {teacher.phone}
-            </p>
-            <p>
-              <strong>Designation:</strong> {teacher.designation}
-            </p>
-            <p>
-              <strong>Salary:</strong> {teacher.salary}
-            </p>
-          </div>
+      {/* Main Content */}
+      <div style={{ 
+        flex: 1, 
+        backgroundColor: "#e3dcc2", 
+        padding: "20px", 
+        marginLeft: "250px", // Sidebar ki width ke hisab se margin diya gaya hai
+        overflowY: "auto", // Content scrollable hai
+      }}>
+        <h3 style={{ color: "#69360d" }}>Teacher Payslip</h3>
 
-          <h4 className="mt-4">Add New Payslip</h4>
-          <div className="card p-3">
-            <input
-              type="month"
-              name="payPeriod"
-              className="form-control mb-2"
-              onChange={handleSimpleChange}
-            />
-            <input
-              type="number"
-              name="paidDays"
-              placeholder="Paid Days"
-              className="form-control mb-2"
-              onChange={handleSimpleChange}
-            />
-            <input
-              type="number"
-              name="lopDays"
-              value={newPayslip.lopDays}
-              className="form-control mb-2"
-              readOnly
-            />
+        {fetching ? (
+          <p>Loading teacher details...</p>
+        ) : teacher ? (
+          <>
+            <div className="card p-3 mt-3" style={{ borderColor: "#69360d" }}>
+              <h5 style={{ color: "#69360d" }}>Teacher Details</h5>
+              <p style={{ color: "#69360d" }}>
+                <strong>Name:</strong> {teacher.name}
+              </p>
+              <p style={{ color: "#69360d" }}>
+                <strong>Phone:</strong> {teacher.phone}
+              </p>
+              <p style={{ color: "#69360d" }}>
+                <strong>Designation:</strong> {teacher.designation}
+              </p>
+              <p style={{ color: "#69360d" }}>
+                <strong>Salary:</strong> {teacher.salary}
+              </p>
+            </div>
 
-            <h6>Earnings</h6>
-            <input
-              type="number"
-              placeholder="Allowances"
-              className="form-control mb-2"
-              onChange={(e) => handleInputChange(e, "earnings", "allowances")}
-            />
-            <input
-              type="number"
-              placeholder="Other Benefits"
-              className="form-control mb-2"
-              onChange={(e) => handleInputChange(e, "earnings", "otherBenefits")}
-            />
+            <h4 className="mt-4" style={{ color: "#69360d" }}>Add New Payslip</h4>
+            <div className="card p-3" style={{ borderColor: "#69360d" }}>
+              <input
+                type="month"
+                name="payPeriod"
+                className="form-control mb-2"
+                style={{ borderColor: "#69360d", color: "#69360d" }}
+                onChange={handleSimpleChange}
+              />
+              <input
+                type="number"
+                name="paidDays"
+                placeholder="Paid Days"
+                className="form-control mb-2"
+                style={{ borderColor: "#69360d", color: "#69360d" }}
+                onChange={handleSimpleChange}
+              />
+              <input
+                type="number"
+                name="lopDays"
+                value={newPayslip.lopDays}
+                className="form-control mb-2"
+                style={{ borderColor: "#69360d", color: "#69360d" }}
+                readOnly
+              />
 
-            <h6>Deductions</h6>
-            <input
-              type="number"
-              placeholder="Provident Fund (PF)"
-              className="form-control mb-2"
-              onChange={(e) => handleInputChange(e, "deductions", "pf")}
-            />
-            <input
-              type="number"
-              placeholder="Other Deductions"
-              className="form-control mb-2"
-              onChange={(e) => handleInputChange(e, "deductions", "otherDeductions")}
-            />
+              <h6 style={{ color: "#69360d" }}>Earnings</h6>
+              <input
+                type="number"
+                placeholder="Allowances"
+                className="form-control mb-2"
+                style={{ borderColor: "#69360d", color: "#69360d" }}
+                onChange={(e) => handleInputChange(e, "earnings", "allowances")}
+              />
+              <input
+                type="number"
+                placeholder="Other Benefits"
+                className="form-control mb-2"
+                style={{ borderColor: "#69360d", color: "#69360d" }}
+                onChange={(e) => handleInputChange(e, "earnings", "otherBenefits")}
+              />
 
-            <h6>Net Pay</h6>
-            <input
-              type="text"
-              value={`₹${newPayslip.netPay}`}
-              className="form-control mb-2"
-              readOnly
-            />
+              <h6 style={{ color: "#69360d" }}>Deductions</h6>
+              <input
+                type="number"
+                placeholder="Provident Fund (PF)"
+                className="form-control mb-2"
+                style={{ borderColor: "#69360d", color: "#69360d" }}
+                onChange={(e) => handleInputChange(e, "deductions", "pf")}
+              />
+              <input
+                type="number"
+                placeholder="Other Deductions"
+                className="form-control mb-2"
+                style={{ borderColor: "#69360d", color: "#69360d" }}
+                onChange={(e) => handleInputChange(e, "deductions", "otherDeductions")}
+              />
 
-            <button
-              className="btn btn-success mt-2"
-              onClick={addPayslip}
-              disabled={loading}
-            >
-              {loading ? "Adding..." : "➕ Add Payslip"}
-            </button>
+              <h6 style={{ color: "#69360d" }}>Net Pay</h6>
+              <input
+                type="text"
+                value={`₹${newPayslip.netPay}`}
+                className="form-control mb-2"
+                style={{ borderColor: "#69360d", color: "#69360d" }}
+                readOnly
+              />
 
-            <button
-              className="btn btn-primary mt-2"
-              onClick={() => generatePDF(teacher, newPayslip, payslips)}
-            >
-              Download Payslip PDF
-            </button>
-          </div>
+              <button
+                className="btn btn-success mt-2"
+                style={{ backgroundColor: "#69360d", borderColor: "#69360d" }}
+                onClick={addPayslip}
+                disabled={loading}
+              >
+                {loading ? "Adding..." : "➕ Add Payslip"}
+              </button>
 
-          <h4 className="mt-4">Payment History</h4>
-          <div className="card p-3">
-            {payslips.length > 0 ? (
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Pay Period</th>
-                    <th>Paid Days</th>
-                    <th>LOP Days</th>
-                    <th>Net Pay</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {payslips.map((payslip, index) => (
-                    <tr key={index}>
-                      <td>{payslip.payPeriod}</td>
-                      <td>{payslip.paidDays}</td>
-                      <td>{payslip.lopDays}</td>
-                      <td>₹{payslip.netPay}</td>
+              <button
+                className="btn btn-primary mt-2"
+                style={{ backgroundColor: "#69360d", borderColor: "#69360d" }}
+                onClick={() => generatePDF(teacher, newPayslip, payslips)}
+              >
+                Download Payslip PDF
+              </button>
+            </div>
+
+            <h4 className="mt-4" style={{ color: "#69360d" }}>Payment History</h4>
+            <div className="card p-3" style={{ borderColor: "#69360d" }}>
+              {payslips.length > 0 ? (
+                <table className="table">
+                  <thead>
+                    <tr style={{ backgroundColor: "#69360d", color: "#e3dcc2" }}>
+                      <th>Pay Period</th>
+                      <th>Paid Days</th>
+                      <th>LOP Days</th>
+                      <th>Net Pay</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p>No payslips found.</p>
-            )}
-          </div>
-        </>
-      ) : (
-        <p>❌ Teacher not found.</p>
-      )}
+                  </thead>
+                  <tbody>
+                    {payslips.map((payslip, index) => (
+                      <tr key={index} style={{ color: "#69360d" }}>
+                        <td>{payslip.payPeriod}</td>
+                        <td>{payslip.paidDays}</td>
+                        <td>{payslip.lopDays}</td>
+                        <td>₹{payslip.netPay}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <p style={{ color: "#69360d" }}>No payslips found.</p>
+              )}
+            </div>
+          </>
+        ) : (
+          <p style={{ color: "#69360d" }}>❌ Teacher not found.</p>
+        )}
+      </div>
     </div>
   );
 };

@@ -17,8 +17,8 @@ const Login = () => {
 
   return (
     <div
-      className="d-flex justify-content-center align-items-center vh-100"
-      style={{ background: "linear-gradient(to bottom, #69360d, #e3dcc2)" }}
+      className="d-flex justify-content-center align-i #69360d, #e3dcc2tems-center vh-100"
+      style={{ background: "linear-gradient(to bottom,)" }}
     >
       <div
         className="bg-light p-4 rounded"
