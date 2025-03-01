@@ -41,7 +41,7 @@ const SignupPage = () => {
       setFormData({ name: "", email: "", dob: "", password: "" });
 
       // ✅ Redirect to login page after 2 seconds
-      setTimeout(() => navigate("/login"), 2000);
+      setTimeout(() => navigate("/"), 2000);
     } catch (error) {
       setMessage(error.message || "An error occurred.");
     }
