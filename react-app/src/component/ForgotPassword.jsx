@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import logo from "../assets/colorlogo.svg"; // ✅ Logo import
+import logo from "../assets/colorlogo.svg";
 
 const ForgotPassword = () => {
+  const navigate = useNavigate(); // Initialize navigate
+
   const [formData, setFormData] = useState({
     email: "",
     dob: "",
@@ -11,15 +14,13 @@ const ForgotPassword = () => {
     confirmNewPassword: "",
   });
 
-  const [message, setMessage] = useState(""); // Success/Error Message
-  const [error, setError] = useState(""); // Error Message
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -36,7 +37,12 @@ const ForgotPassword = () => {
       });
 
       setMessage(response.data.message);
-      setError(""); // Clear errors if successful
+      setError("");
+      
+      // Redirect to login page after success
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");
     }
@@ -51,14 +57,9 @@ const ForgotPassword = () => {
         className="bg-light p-4 rounded"
         style={{ width: "400px", boxShadow: "0 4px 8px rgba(0,0,0,0.2)" }}
       >
-        {/* ✅ Header with Logo */}
         <div
           className="text-center position-relative mb-3"
-          style={{
-            backgroundColor: "#69360d",
-            padding: "20px 0",
-            borderRadius: "10px 10px 0 0",
-          }}
+          style={{ backgroundColor: "#69360d", padding: "20px 0", borderRadius: "10px 10px 0 0" }}
         >
           <img
             src={logo}
@@ -66,16 +67,14 @@ const ForgotPassword = () => {
             className="mb-2"
             style={{ width: "60px", height: "60px", borderRadius: "50%" }}
           />
-          <h4 className="text-white mt-2">Siddhi Classes</h4>
+          <h4 className="text-white mt-2"></h4>
         </div>
 
         <h5 className="text-center mb-3">Reset Your Password</h5>
 
-        {/* ✅ Success & Error Messages */}
         {message && <div className="alert alert-success">{message}</div>}
         {error && <div className="alert alert-danger">{error}</div>}
 
-        {/* ✅ Forgot Password Form */}
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <input
