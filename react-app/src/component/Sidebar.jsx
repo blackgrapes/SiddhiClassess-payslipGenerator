@@ -48,13 +48,18 @@ const Sidebar = () => {
 
       {/* Logout Button */}
       <div className="mt-auto">
-        <Button
-          className="w-100 text-light"
-          style={{ backgroundColor: "#5B2A0F", border: "none" }}
-          onClick={() => navigate("/")} // ✅ Navigate on click
-        >
-          LOGOUT
-        </Button>
+      <Button
+  className="w-100 text-light"
+  style={{ backgroundColor: "#5B2A0F", border: "none" }}
+  onClick={() => {
+    if (window.confirm("Are you sure you want to logout?")) {
+      navigate("/");
+    }
+  }}
+>
+  LOGOUT
+</Button>
+
       </div>
     </div>
   );
