@@ -150,7 +150,7 @@ const TeacherList = () => {
                         </td>
                         <td>
                           <Button
-                            variant="primary"
+                            variant="danger" // 🔴 Changed to Red
                             size="sm"
                             onClick={() => handleDelete(teacher.email)}
                           >

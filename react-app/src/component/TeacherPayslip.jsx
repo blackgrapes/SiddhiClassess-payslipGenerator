@@ -329,10 +329,11 @@ const TeacherPayslip = () => {
         width: "250px", 
         backgroundColor: "#69360d", 
         color: "#e3dcc2", 
-        padding: "20px", 
+        paddingRight: "20px",
         position: "fixed", // Sidebar ko fixed kiya gaya hai
         height: "100vh", // Full height
         overflowY: "hidden", // Scrolling disabled
+        overflowX: "hidden", // Scrolling disabled
         display: "flex", 
         flexDirection: "column", 
         justifyContent: "center", // Content ko vertically center kiya gaya hai
