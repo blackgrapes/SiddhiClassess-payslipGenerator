@@ -349,8 +349,13 @@ const TeacherPayslip = () => {
         padding: "20px", 
         marginLeft: "250px", // Sidebar ki width ke hisab se margin diya gaya hai
         overflowY: "auto", // Content scrollable hai
+        
       }}>
-        <h3 style={{ color: "#69360d" }}>Teacher Payslip</h3>
+        
+        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100px" }}>
+  <h3 style={{ color: "#69360d" }}>TEACHER-PAYSLIP</h3>
+</div>
+
 
         {fetching ? (
           <p>Loading teacher details...</p>
@@ -372,7 +377,10 @@ const TeacherPayslip = () => {
               </p>
             </div>
 
-            <h4 className="mt-4" style={{ color: "#69360d" }}>Add New Payslip</h4>
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100px" }}>
+  <h3 style={{ color: "#69360d" }}>ADD NEW PAY-SLIP</h3>
+</div>
+
             <div className="card p-3" style={{ borderColor: "#69360d" }}>
               <input
                 type="month"
@@ -445,7 +453,7 @@ const TeacherPayslip = () => {
                 onClick={addPayslip}
                 disabled={loading}
               >
-                {loading ? "Adding..." : "➕ Add Payslip"}
+                {loading ? "Adding..." : "Add Payslip"}
               </button>
 
               <button
@@ -457,7 +465,10 @@ const TeacherPayslip = () => {
               </button>
             </div>
 
-            <h4 className="mt-4" style={{ color: "#69360d" }}>Payment History</h4>
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100px" }}>
+  <h3 style={{ color: "#69360d" }}>PAYMENT HISTORY</h3>
+</div>
+
             <div className="card p-3" style={{ borderColor: "#69360d" }}>
               {payslips.length > 0 ? (
                 <table className="table">
