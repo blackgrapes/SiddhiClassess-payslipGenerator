@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import logo from "../assets/colorlogo.svg"; // 🔹 Logo import kiya
+import logo from "../assets/colorlogo.svg";
 
-const URL = import.meta.env.VITE_APP_URL; // ✅ Ensure this is correctly set in .env file
+const URL = import.meta.env.VITE_APP_URL;
 
 const SignupPage = () => {
-  const navigate = useNavigate(); // ✅ Initialize navigate function
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -41,7 +41,6 @@ const SignupPage = () => {
       setMessage("Signup successful! Redirecting to login... 🎉");
       setFormData({ name: "", email: "", dob: "", password: "" });
 
-      // ✅ Redirect to login page after 2 seconds
       setTimeout(() => navigate("/"), 2000);
     } catch (error) {
       setMessage(error.message || "An error occurred.");
@@ -59,28 +58,15 @@ const SignupPage = () => {
         className="bg-light p-4 rounded"
         style={{ width: "400px", boxShadow: "0 4px 8px rgba(0,0,0,0.2)" }}
       >
-        {/* 🔹 Logo + Header */}
+        {/* Colored Header with Logo Inside */}
         <div
-          className="text-center position-relative mb-3"
+          className="text-center p-4"
           style={{
             backgroundColor: "#69360d",
-            padding: "20px 0",
             borderRadius: "10px 10px 0 0",
-            position: "relative",
           }}
         >
-          <img
-            src={logo}
-            alt="Logo"
-            style={{
-              width: "100px",
-              position: "absolute",
-              top: "-40px",
-              left: "50%",
-              transform: "translateX(-50%)",
-            }}
-          />
-          <h4 className="text-white mt-2">Siddhi Classes</h4>
+          <img src={logo} alt="Logo" style={{ width: "100px" }} />
         </div>
 
         <h5 className="text-center mb-3">Create New Account</h5>
