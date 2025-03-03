@@ -76,7 +76,7 @@ const AddTeacher = () => {
           {/* ✅ LOGO + Siddhi Classes (Brown Background) */}
           <div className="text-center p-3 rounded" style={{ backgroundColor: "#69360d" }}>
             <img src={logo} alt="Siddhi Classes Logo" style={{ height: "60px", marginBottom: "10px" }} />
-            <h3 className="text-white">Siddhi Classes - Add Teacher</h3>
+            <h3 className="text-white">ADD TEACHER</h3>
           </div>
 
           {/* ✅ Teacher Form */}

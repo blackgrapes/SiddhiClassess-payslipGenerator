@@ -69,7 +69,7 @@ const StudentDashboard = () => {
           {/* ✅ LOGO + Siddhi Classes (Brown Background) */}
           <div className="text-center p-3 rounded" style={{ backgroundColor: "#69360d" }}>
             <img src={logo} alt="Siddhi Classes Logo" style={{ height: "60px", marginBottom: "10px" }} />
-            <h3 className="text-white">Siddhi Classes - Add Student</h3>
+            <h3 className="text-white">ADD STUDENT</h3>
           </div>
 
           {/* ✅ Student Form */}

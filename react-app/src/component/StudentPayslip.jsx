@@ -210,9 +210,9 @@ const StudentPayslip = () => {
     <div className="container-fluid" style={{ backgroundColor: "#e3dcc2", minHeight: "100vh" }}>
       <div className="row">
         {/* Fixed Sidebar */}
-        <div className="col-md-3 col-lg-2 bg-dark text-white min-vh-100 position-fixed">
-          <Sidebar />
-        </div>
+        <div className="col-md-3 col-lg-2 bg-dark text-white min-vh-100 position-fixed me-3">
+  <Sidebar />
+</div>
 
         {/* Main Content */}
         <div className="col-md-9 col-lg-10 offset-md-3 offset-lg-2 p-4">
