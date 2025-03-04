@@ -23,7 +23,6 @@ const Home = () => {
           <Row className="mb-4">
             <Col className="text-center p-3 rounded" style={{ backgroundColor: "#E7D9B7" }}>
               <Image src={logo} alt="Siddhi Classes Logo" style={{ height: "60px", marginBottom: "10px" }} />
-              <h4 className="fw-bold">Siddhi Classes</h4>
             </Col>
           </Row>
 

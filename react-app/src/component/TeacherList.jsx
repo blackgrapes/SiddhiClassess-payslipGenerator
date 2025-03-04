@@ -72,7 +72,7 @@ const TeacherList = () => {
           {/* ✅ LOGO + Siddhi Classes (Brown Background) */}
           <div className="text-center p-3 rounded" style={{ backgroundColor: "#69360d" }}>
             <img src={logo} alt="Siddhi Classes Logo" style={{ height: "60px", marginBottom: "10px" }} />
-            <h2 className="text-white">Siddhi Classes - Teacher List</h2>
+            <h2 className="text-white">TEACHER LIST</h2>
           </div>
 
           {/* ✅ Search Bar and Add Teacher Button */}

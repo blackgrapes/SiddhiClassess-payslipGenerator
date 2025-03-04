@@ -143,18 +143,34 @@ const TeacherPayslip = () => {
   };
 
   const addPayslip = async () => {
+    // Check if required fields are filled
+    if (
+      !newPayslip.payPeriod ||
+      newPayslip.paidDays <= 0 ||
+      !newPayslip.payDate ||
+      newPayslip.earnings.basicSalary <= 0 ||
+      newPayslip.netPay <= 0
+    ) {
+      setMessage("❌ Please fill all required fields correctly.");
+      alert("❌ Please fill all required fields correctly.");
+      return;
+    }
+  
     setLoading(true);
     try {
       await axios.post(`${API_URL}/teacher/${email}/add-payslip`, newPayslip);
       setMessage("✅ Payslip added successfully!");
+      alert("✅ Payslip added successfully!"); // Show alert
       fetchTeacherDetails(); // Refresh the payslips list
     } catch (error) {
       setMessage("❌ Failed to add payslip.");
+      alert("❌ Failed to add payslip!"); // Show alert for failure
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   const generatePDF = async (teacher = {}, newPayslip = {}, payslips = []) => {
     try {
@@ -378,7 +394,7 @@ const TeacherPayslip = () => {
             </div>
 
             <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100px" }}>
-  <h3 style={{ color: "#69360d" }}>ADD NEW PAY-SLIP</h3>
+  <h3 style={{ color: "#69360d" }}>SAVE NEW PAY-SLIP</h3>
 </div>
 
             <div className="card p-3" style={{ borderColor: "#69360d" }}>
@@ -461,7 +477,7 @@ const TeacherPayslip = () => {
                 style={{ backgroundColor: "#69360d", borderColor: "#69360d" }}
                 onClick={() => generatePDF(teacher, newPayslip, payslips)}
               >
-                Download Payslip PDF
+                Download PDF
               </button>
             </div>
 

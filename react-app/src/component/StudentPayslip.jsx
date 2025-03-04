@@ -216,7 +216,7 @@ const StudentPayslip = () => {
 
         {/* Main Content */}
         <div className="col-md-9 col-lg-10 offset-md-3 offset-lg-2 p-4">
-          <h3 className="text-center" style={{ color: "#69360d" }}>Student Payslip</h3>
+          <h3 className="text-center" style={{ color: "#69360d" }}>STUDENT-PAYSLIP</h3>
 
           {fetching ? (
             <p>Loading student details...</p>
@@ -231,7 +231,7 @@ const StudentPayslip = () => {
               <p><strong>Fees Paid:</strong> ₹{payments.reduce((sum, payment) => sum + Number(payment.amount), 0)}</p>
               <p><strong>Pending Fees:</strong> ₹{student.totalFees - payments.reduce((sum, payment) => sum + Number(payment.amount), 0)}</p>
               <button className="btn mt-3" style={{ backgroundColor: "#69360d", color: "#fff" }} onClick={generatePDF}>
-                📄 Download PDF
+                Download PDF
               </button>
             </div>
           ) : (
