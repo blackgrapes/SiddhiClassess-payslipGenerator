@@ -4,6 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_APP_URL;
+
 const EditTeacher = () => {
   const navigate = useNavigate();
   const { email } = useParams(); // Get teacher's email from URL params
@@ -21,7 +23,7 @@ const EditTeacher = () => {
   useEffect(() => {
     const fetchTeacher = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/teacher/${email}`);
+        const response = await axios.get(`${API_URL}/teacher/${email}`);
         setTeacher({
           name: response.data.name,
           phone: response.data.phone,
@@ -48,7 +50,7 @@ const EditTeacher = () => {
     e.preventDefault();
     setSuccess(false);
     try {
-      await axios.put(`http://localhost:5000/teacher/${email}/update`, teacher);
+      await axios.put(`${API_URL}/teacher/${email}/update`, teacher);
       setSuccess(true);
       setTimeout(() => navigate("/TeacherList"), 1000);
     } catch (error) {

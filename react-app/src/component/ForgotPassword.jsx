@@ -4,6 +4,8 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../assets/colorlogo.svg";
 
+const API_URL = import.meta.env.VITE_APP_URL;
+
 const ForgotPassword = () => {
   const navigate = useNavigate(); // Initialize navigate
 
@@ -30,7 +32,7 @@ const ForgotPassword = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/admin/forgot-password", {
+      const response = await axios.post(`${API_URL}/admin/forgot-password`, {
         email: formData.email,
         dob: formData.dob,
         newPassword: formData.newPassword,

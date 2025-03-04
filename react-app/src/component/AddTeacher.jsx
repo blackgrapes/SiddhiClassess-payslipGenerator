@@ -4,6 +4,8 @@ import Sidebar from "./Sidebar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../assets/colorlogo.svg"; // ✅ Logo Import
 
+const API_URL = import.meta.env.VITE_APP_URL;
+
 const AddTeacher = () => {
   const [teacher, setTeacher] = useState({
     name: "",
@@ -28,7 +30,7 @@ const AddTeacher = () => {
     setMessage({ text: "", type: "" });
 
     try {
-      const response = await axios.post("http://localhost:5000/teacher/add", teacher);
+      const response = await axios.post(`${API_URL}/teacher/add`, teacher);
       setMessage({ text: "✅ Teacher added successfully!", type: "success" });
 
       // ✅ Reset form

@@ -26,7 +26,7 @@ const StudentDashboard = () => {
     const studentData = { name, email, phone, rollNumber, class: studentClass, admissionDate, totalFees };
 
     try {
-      await axios.post("http://localhost:5000/student/add", studentData);
+      await axios.post(`${API_URL}/student/add`, studentData);
       setMessage("✅ Student added successfully!");
 
       // ✅ Fields ko clear kiya

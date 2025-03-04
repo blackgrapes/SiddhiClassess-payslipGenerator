@@ -5,6 +5,9 @@ import Sidebar from "./Sidebar";
 import axios from "axios";
 import logo from "../assets/colorlogo.svg"; // ✅ Logo Import
 
+
+const API_URL = import.meta.env.VITE_APP_URL;
+
 const TeacherList = () => {
   const navigate = useNavigate();
   const [teachers, setTeachers] = useState([]);
@@ -19,7 +22,7 @@ const TeacherList = () => {
 
   const fetchTeachers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/teacher/all");
+      const response = await axios.get(`${API_URL}/teacher/all`);
       setTeachers(response.data);
       setFilteredTeachers(response.data);
     } catch (error) {
@@ -44,7 +47,7 @@ const TeacherList = () => {
   const handleDelete = async (email) => {
     if (window.confirm("Are you sure you want to delete this teacher?")) {
       try {
-        await axios.delete(`http://localhost:5000/teacher/${email}/delete`);
+        await axios.delete(`${API_URL}/teacher/${email}/delete`);
 
         // Update the state properly
         setTeachers((prevTeachers) => prevTeachers.filter((teacher) => teacher.email !== email));

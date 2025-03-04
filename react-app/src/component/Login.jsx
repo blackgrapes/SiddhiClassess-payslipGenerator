@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { FaUser, FaLock } from "react-icons/fa";
 import logo from "../assets/colorlogo.svg";
 
-const URL = import.meta.env.VITE_APP_URL;
+const API_URL = import.meta.env.VITE_APP_URL;
 
 const Login = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${URL}/admin/login`, {
+      const response = await fetch(`${API_URL}/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

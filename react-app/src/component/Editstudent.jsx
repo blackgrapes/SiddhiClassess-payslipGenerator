@@ -4,6 +4,8 @@ import { Form, Button, Container, Card, Spinner, Alert } from "react-bootstrap";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 
+const API_URL = import.meta.env.VITE_APP_URL;
+
 const EditStudent = () => {
   const { rollNumber } = useParams(); // Get student roll number from URL params
   const navigate = useNavigate();
@@ -19,7 +21,7 @@ const EditStudent = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/student/${rollNumber}`)
+      .get(`${API_URL}/student/${rollNumber}`)
       .then((response) => {
         setStudent(response.data);
       })
@@ -38,7 +40,7 @@ const EditStudent = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .put(`http://localhost:5000/student/${rollNumber}`, student)
+      .put(`${API_URL}/student/${rollNumber}`, student)
       .then(() => {
         alert("Student details updated successfully!");
         navigate("/StudentList");
