@@ -227,7 +227,7 @@ const TeacherPayslip = () => {
       yPosition -= 20; // Space below the address
 
       // Contact Details
-      drawText("Phone: 9876543210 | Email: info@coaching.com", 0, yPosition, 10, "center");
+      drawText("Email: tejassiddhi12@gmail.com", 0, yPosition, 10, "center");
       yPosition -= 30; // Extra space before the first section
 
       // Teacher Details
