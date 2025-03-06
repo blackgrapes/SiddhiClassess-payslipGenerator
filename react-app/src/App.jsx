@@ -14,25 +14,27 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import TeacherList from "./component/TeacherList";
 import TeacherPayslip from "./component/TeacherPayslip";
 import Editstudent from "./component/Editstudent";
-
-
+import PrivateRoute from "./component/PrivateRoute"; // ✅ Import updated PrivateRoute
 
 function App() {
   return (
-    <Router> {/* ✅ BrowserRouter added here */}
+    <Router>
       <Routes>
-        <Route path="/" element={<Login/>} />
+        {/* Public Routes */}
+        <Route path="/" element={<Login />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/Home" element={<Home />} />
-        <Route path="/AddStudent" element={<AddStudent />} />
-        <Route path="/StudentList" element={<StudentList />} />
-        <Route path="/teacherList" element={<TeacherList />} />
-        <Route path="/StudentPayment/:rollNumber" element={<StudentPayslip/>} />
-        <Route path="/addteacher" element={<AddTeacher/>} />
-        <Route path="/TeacherPayslip/:email" element={<TeacherPayslip/>} />
-        <Route path="/Editstudent/:rollNumber" element={<Editstudent/>} />
-        <Route path="/editTeacher/:email" element={<EditTeacher />} /> 
+
+        {/* Private Routes */}
+        <Route path="/Home" element={<PrivateRoute element={<Home />} />} />
+        <Route path="/AddStudent" element={<PrivateRoute element={<AddStudent />} />} />
+        <Route path="/StudentList" element={<PrivateRoute element={<StudentList />} />} />
+        <Route path="/teacherList" element={<PrivateRoute element={<TeacherList />} />} />
+        <Route path="/StudentPayment/:rollNumber" element={<PrivateRoute element={<StudentPayslip />} />} />
+        <Route path="/addteacher" element={<PrivateRoute element={<AddTeacher />} />} />
+        <Route path="/TeacherPayslip/:email" element={<PrivateRoute element={<TeacherPayslip />} />} />
+        <Route path="/Editstudent/:rollNumber" element={<PrivateRoute element={<Editstudent />} />} />
+        <Route path="/editTeacher/:email" element={<PrivateRoute element={<EditTeacher />} />} />
       </Routes>
     </Router>
   );

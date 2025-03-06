@@ -29,7 +29,13 @@ const Login = () => {
       if (!response.ok) throw new Error(data.message || "Login failed");
 
       console.log("Login successful", data);
-      navigate("/home");
+      
+      // ✅ Store token in localStorage
+      localStorage.setItem("token", data.token);
+
+      // ✅ Redirect to home
+      navigate("/home", { replace: true });
+
     } catch (error) {
       setError(error.message || "An error occurred during login");
     }
