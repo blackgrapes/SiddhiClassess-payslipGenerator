@@ -29,6 +29,18 @@ const Sidebar = () => {
 
         // Redirect to login page
         window.location.href = "/";
+
+        // Disable back button (2 baar back block hoga)
+        setTimeout(() => {
+          window.history.pushState(null, "", window.location.href);
+          window.history.pushState(null, "", window.location.href);
+          window.history.pushState(null, "", window.location.href); // 2nd back block
+
+          window.addEventListener("popstate", function () {
+            window.history.pushState(null, "", window.location.href);
+          });
+        }, 0);
+
       } catch (error) {
         console.error("Logout Error:", error);
       }
