@@ -124,7 +124,7 @@ const StudentPayslip = () => {
       yPosition -= 15;
   
       // Contact Details
-      drawText("Email: tejassiddhi12@gmail.com", 0, yPosition, 10, "center");
+      drawText("Email: siddhiclassess@gmail.com", 0, yPosition, 10, "center");
       yPosition -= 30; // Extra space before the first section
   
     
